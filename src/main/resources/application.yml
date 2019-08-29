@@ -1,1 +1,10 @@
-
+#thymeleafÄ£°å
+spring:
+  thymeleaf:
+    cache: true
+  prefix: classpath:/templates/
+  suffix: .html
+  mode: HTML5
+  encoding: UTF-8
+  servlet:
+    content-type: text/html

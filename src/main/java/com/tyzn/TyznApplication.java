@@ -7,8 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class TyznApplication {
 
     public static void main(String[] args) {
-        //
         SpringApplication.run(TyznApplication.class, args);
+
     }
 
 }

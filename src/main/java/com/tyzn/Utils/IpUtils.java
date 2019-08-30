@@ -5,6 +5,9 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
 
+/**
+ * Ip工具类，获取ip
+ */
 public class IpUtils {
     /***
      * 获取外网IP

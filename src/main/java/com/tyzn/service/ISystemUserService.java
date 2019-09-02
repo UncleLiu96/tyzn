@@ -1,7 +1,7 @@
 package com.tyzn.service;
 
 
-import com.tyzn.pojo.SystemUser;
+import com.common.pojo.SystemUser;
 
 /**
  * <p>

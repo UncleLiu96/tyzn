@@ -1,6 +1,6 @@
 package com.tyzn.mapper;
 
-import com.tyzn.pojo.SystemUser;
+import com.common.pojo.SystemUser;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

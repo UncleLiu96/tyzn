@@ -1,7 +1,7 @@
 package com.tyzn.NettyService;
 
-import com.tyzn.Utils.IpUtils;
-import com.tyzn.Utils.RemotingUtil;
+import com.common.Utils.IpUtils;
+import com.common.Utils.RemotingUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelFutureListener;

@@ -1,4 +1,4 @@
-package com.tyzn.Utils;
+package com.common.Utils;
 
 import lombok.extern.slf4j.Slf4j;
 

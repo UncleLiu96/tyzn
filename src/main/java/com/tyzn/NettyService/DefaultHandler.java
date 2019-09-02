@@ -79,5 +79,7 @@ public class DefaultHandler extends SimpleChannelInboundHandler<Object> {
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, Object o) throws Exception {
         log.info("收到消息");
+        log.info("【" + channelHandlerContext.channel().id() + "】" + " :" + o);
+        channelHandlerContext.writeAndFlush("你好"+channelHandlerContext.channel().id());
     }
 }

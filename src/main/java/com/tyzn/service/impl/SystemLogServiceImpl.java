@@ -1,7 +1,7 @@
 package com.tyzn.service.impl;
 
+import com.common.pojo.SystemLog;
 import com.tyzn.mapper.SystemLogMapper;
-import com.tyzn.pojo.SystemLog;
 import com.tyzn.service.ISystemLogService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

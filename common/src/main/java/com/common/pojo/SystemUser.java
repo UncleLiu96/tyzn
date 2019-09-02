@@ -1,4 +1,4 @@
-package com.tyzn.pojo;
+package com.common.pojo;
 
 
 /**

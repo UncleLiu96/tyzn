@@ -1,4 +1,4 @@
-package com.tyzn.enums;
+package com.common.enums;
 
 public enum OperationType {
     /**

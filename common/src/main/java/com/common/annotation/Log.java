@@ -1,8 +1,10 @@
-package com.tyzn.annotation;
+package com.common.annotation;
 
 
-import com.tyzn.enums.OperationType;
-import com.tyzn.enums.OperationUnit;
+
+
+import com.common.enums.OperationType;
+import com.common.enums.OperationUnit;
 
 import java.lang.annotation.*;
 

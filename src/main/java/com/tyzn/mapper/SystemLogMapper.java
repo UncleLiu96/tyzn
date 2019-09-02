@@ -1,6 +1,6 @@
 package com.tyzn.mapper;
 
-import com.tyzn.pojo.SystemLog;
+import com.common.pojo.SystemLog;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

@@ -1,7 +1,7 @@
 package com.tyzn.service.impl;
 
+import com.common.pojo.SystemUser;
 import com.tyzn.mapper.SystemUserMapper;
-import com.tyzn.pojo.SystemUser;
 import com.tyzn.service.ISystemUserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

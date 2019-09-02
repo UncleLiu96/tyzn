@@ -1,10 +1,9 @@
 package com.tyzn.aspectj;
 
 import com.alibaba.fastjson.JSONObject;
-import com.tyzn.Utils.IpUtils;
-import com.tyzn.annotation.Log;
-import com.tyzn.pojo.SystemLog;
-import com.tyzn.pojo.SystemUser;
+import com.common.annotation.Log;
+import com.common.pojo.SystemLog;
+import com.common.Utils.IpUtils;
 import com.tyzn.service.ISystemLogService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -35,7 +34,7 @@ public class LogAspect {
      * 此处的切点是注解的方式，也可以用包名的方式达到相同的效果
      * '@Pointcut("execution(* com.wwj.springboot.service.impl.*.*(..))")'
      */
-    @Pointcut("@annotation(com.tyzn.annotation.Log)")
+    @Pointcut("@annotation(com.common.annotation.Log)")
     public void operationLog(){}
 
 

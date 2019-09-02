@@ -1,35 +1,35 @@
-package com.tyzn.pojo;
+package com.common.pojo;
 
 import java.io.Serializable;
 
 /**
- * @ClassName:timed_task 
- * @Description: TODO(类说明：定时任务 )
+ * @ClassName:humidity_recorder 
+ * @Description: TODO(类说明：湿度记录 )
  * @author Uncle liu 
  * @date 2019-08-29 16:11:05
  */ 
-public class TimedTask implements Serializable{
+public class HumidityRecorder implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private Integer id; 	//ID
-	private String taskName; 	//名称
-	private String timeQuantum; 	//时间段
+	private String deviceNumber; 	//设备编号
+	private double humidity; 	//检查值
 	private String createTime; 	//创建时间
 	/**
 	 * @Description: TODO(无参构造方法) 
 	 */ 
-	public TimedTask(){
+	public HumidityRecorder(){
 	}
 	/**
 	 * @Description: TODO(有参构造方法) 
 	 * @param id	ID
-	 * @param taskName	名称
-	 * @param timeQuantum	时间段
+	 * @param deviceNumber	设备编号
+	 * @param humidity	检查值
 	 * @param createTime	创建时间
 	 */ 
-	public TimedTask(Integer id,String taskName,String timeQuantum,String createTime){
+	public HumidityRecorder(Integer id,String deviceNumber,double humidity,String createTime){
 		this.id=id;
-		this.taskName=taskName;
-		this.timeQuantum=timeQuantum;
+		this.deviceNumber=deviceNumber;
+		this.humidity=humidity;
 		this.createTime=createTime;
 	}
 	/**
@@ -49,36 +49,36 @@ public class TimedTask implements Serializable{
 		return id;
 	}
 	/**
-	 * @Title:setTaskName 
-	 * @Description: TODO(设置TaskName	名称)
-	 * @param taskName
+	 * @Title:setDeviceNumber 
+	 * @Description: TODO(设置DeviceNumber	设备编号)
+	 * @param deviceNumber
 	 */ 
-	public void setTaskName(String taskName){
-		this.taskName=taskName;
+	public void setDeviceNumber(String deviceNumber){
+		this.deviceNumber=deviceNumber;
 	}
 	/**
-	 * @Title:setTaskName 
-	 * @Description: TODO(得到TaskName	名称)
+	 * @Title:setDeviceNumber 
+	 * @Description: TODO(得到DeviceNumber	设备编号)
 	 * @return String
 	 */ 
-	public String getTaskName(){
-		return taskName;
+	public String getDeviceNumber(){
+		return deviceNumber;
 	}
 	/**
-	 * @Title:setTimeQuantum 
-	 * @Description: TODO(设置TimeQuantum	时间段)
-	 * @param timeQuantum
+	 * @Title:setHumidity 
+	 * @Description: TODO(设置Humidity	检查值)
+	 * @param humidity
 	 */ 
-	public void setTimeQuantum(String timeQuantum){
-		this.timeQuantum=timeQuantum;
+	public void setHumidity(double humidity){
+		this.humidity=humidity;
 	}
 	/**
-	 * @Title:setTimeQuantum 
-	 * @Description: TODO(得到TimeQuantum	时间段)
-	 * @return String
+	 * @Title:setHumidity 
+	 * @Description: TODO(得到Humidity	检查值)
+	 * @return double
 	 */ 
-	public String getTimeQuantum(){
-		return timeQuantum;
+	public double getHumidity(){
+		return humidity;
 	}
 	/**
 	 * @Title:setCreateTime 
@@ -101,7 +101,7 @@ public class TimedTask implements Serializable{
 	 * @Description: TODO(toString)
 	 */ 
 	public String toString() { 
-		return "TimedTask[id=" + id + ",taskName=" + taskName + ",timeQuantum=" + timeQuantum + ","+
+		return "HumidityRecorder[id=" + id + ",deviceNumber=" + deviceNumber + ",humidity=" + humidity + ","+
 		"createTime=" + createTime + "]";
 	}
 }

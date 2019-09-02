@@ -1,7 +1,7 @@
 package com.tyzn.service;
 
 
-import com.tyzn.pojo.SystemLog;
+import com.common.pojo.SystemLog;
 
 /**
  * <p>

@@ -1,12 +1,9 @@
 package com.tyzn.controller;
 
+import com.common.annotation.Log;
+import com.common.enums.OperationType;
+import com.common.enums.OperationUnit;
 import com.tyzn.NettyService.InitBean;
-import com.tyzn.annotation.Log;
-import com.tyzn.enums.OperationType;
-import com.tyzn.enums.OperationUnit;
-import com.tyzn.service.ISystemUserService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

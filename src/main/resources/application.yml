@@ -1,4 +1,4 @@
-#thymeleafæ¨¡æ¿
+# thymeleafÄ£°å
 spring:
   thymeleaf:
     cache: true
@@ -8,37 +8,30 @@ spring:
   encoding: UTF-8
   servlet:
     content-type: text/html
-  #æ•°æ®è¿æ¥
+# Êı¾İÁ¬½Ó
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://192.168.1.77:3306/tyzn?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
     username: tyzn
     password: tyzn
-
-  # mybatis é…ç½®
-mybatis:
-  mapper-locations: classpath:mybatis/mappers/*.xml
-  configuration:
-    map-underscore-to-camel-case: true #é©¼å³°è½¬æ¢
-    use-generated-keys: true #è·å–æ•°æ®åº“è‡ªå¢åˆ—
-    use-column-label: true #ä½¿ç”¨åˆ—åˆ«åæ›¿æ¢åˆ—å
-
-
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-#nettyæœåŠ¡å™¨é…ç½®
+# mybatis ÅäÖÃ
+  mybatis:
+    config-location: classpath:mybatis/mybatis-config.xml
+    mapper-locations: classpath:mybatis/mapper/*.xml
+# netty·şÎñÆ÷ÅäÖÃ
 tyzn:
   server:
-    serverName: netty #æœåŠ¡å
-    port: 9527 #ç«¯å£
-    keepalive: true #Socketå‚æ•°ï¼Œè¿æ¥ä¿æ´»ï¼Œé»˜è®¤å€¼ä¸ºFalseã€‚å¯ç”¨è¯¥åŠŸèƒ½æ—¶ï¼ŒTCPä¼šä¸»åŠ¨æ¢æµ‹ç©ºé—²è¿æ¥çš„æœ‰æ•ˆæ€§ã€‚å¯ä»¥å°†æ­¤åŠŸèƒ½è§†ä¸ºTCPçš„å¿ƒè·³æœºåˆ¶ï¼Œéœ€è¦æ³¨æ„çš„æ˜¯ï¼šé»˜è®¤çš„å¿ƒè·³é—´éš”æ˜¯7200så³2å°æ—¶ã€‚Nettyé»˜è®¤å…³é—­è¯¥åŠŸèƒ½
-    reuseaddr: true #åœ°å€å¤ç”¨ï¼Œé»˜è®¤å€¼Falseã€‚æœ‰å››ç§æƒ…å†µå¯ä»¥ä½¿ç”¨ï¼š(1).å½“æœ‰ä¸€ä¸ªæœ‰ç›¸åŒæœ¬åœ°åœ°å€å’Œç«¯å£çš„socket1å¤„äºTIME_WAITçŠ¶æ€æ—¶ï¼Œè€Œä½ å¸Œæœ›å¯åŠ¨çš„ç¨‹åºçš„socket2è¦å ç”¨è¯¥åœ°å€å’Œç«¯å£ï¼Œæ¯”å¦‚é‡å¯æœåŠ¡ä¸”ä¿æŒå…ˆå‰ç«¯å£ã€‚(2).æœ‰å¤šå—ç½‘å¡æˆ–ç”¨IP AliasæŠ€æœ¯çš„æœºå™¨åœ¨åŒä¸€ç«¯å£å¯åŠ¨å¤šä¸ªè¿›ç¨‹ï¼Œä½†æ¯ä¸ªè¿›ç¨‹ç»‘å®šçš„æœ¬åœ°IPåœ°å€ä¸èƒ½ç›¸åŒã€‚(3).å•ä¸ªè¿›ç¨‹ç»‘å®šç›¸åŒçš„ç«¯å£åˆ°å¤šä¸ªsocketä¸Šï¼Œä½†æ¯ä¸ªsocketç»‘å®šçš„ipåœ°å€ä¸åŒã€‚(4).å®Œå…¨ç›¸åŒçš„åœ°å€å’Œç«¯å£çš„é‡å¤ç»‘å®šã€‚ä½†è¿™åªç”¨äºUDPçš„å¤šæ’­ï¼Œä¸ç”¨äºTCPã€‚
-    tcpNodelay: true #TCPå‚æ•°ï¼Œç«‹å³å‘é€æ•°æ®ï¼Œé»˜è®¤å€¼ä¸ºTureï¼ˆNettyé»˜è®¤ä¸ºTrueè€Œæ“ä½œç³»ç»Ÿé»˜è®¤ä¸ºFalseï¼‰ã€‚è¯¥å€¼è®¾ç½®Nagleç®—æ³•çš„å¯ç”¨ï¼Œæ”¹ç®—æ³•å°†å°çš„ç¢ç‰‡æ•°æ®è¿æ¥æˆæ›´å¤§çš„æŠ¥æ–‡æ¥æœ€å°åŒ–æ‰€å‘é€çš„æŠ¥æ–‡çš„æ•°é‡ï¼Œå¦‚æœéœ€è¦å‘é€ä¸€äº›è¾ƒå°çš„æŠ¥æ–‡ï¼Œåˆ™éœ€è¦ç¦ç”¨è¯¥ç®—æ³•ã€‚Nettyé»˜è®¤ç¦ç”¨è¯¥ç®—æ³•ï¼Œä»è€Œæœ€å°åŒ–æŠ¥æ–‡ä¼ è¾“å»¶æ—¶ã€‚
-    sndbuf: 10485760 # Socketå‚æ•°ï¼ŒTCPæ•°æ®å‘é€ç¼“å†²åŒºå¤§å°ã€‚
-    revbuf: 10485760 # Socketå‚æ•°ï¼ŒTCPæ•°æ®æ¥æ”¶ç¼“å†²åŒºå¤§å°ã€‚
-    heart: 180 # è¯»è¶…æ—¶æ—¶é—´
-    backlog: 1024 # ?Socketå‚æ•°ï¼ŒæœåŠ¡ç«¯æ¥å—è¿æ¥çš„é˜Ÿåˆ—é•¿åº¦ï¼Œå¦‚æœé˜Ÿåˆ—å·²æ»¡ï¼Œå®¢æˆ·ç«¯è¿æ¥å°†è¢«æ‹’ç»
-    ssl: false # ä½¿ç”¨sslåŠ å¯†
-    #mqttHander: com.lxr.iot.bootstrap.handler.DefaultMqttHandler # é»˜è®¤å¤„ç†
-    #initalDelay: 10 # mqtt qos1 qos2 æ¶ˆæ¯ é‡å‘å»¶è¿Ÿ
-    #protocol: MQTT  # MQTT  MQTT_WS_MQTT(mqtt.js)   MQTT_WS_PAHO(paho.js)
-    #period: 10 # mqtt qos1 qos2 æ¶ˆæ¯ é‡å‘å‘¨æœŸ
+    serverName: netty # ·şÎñÃû
+    port: 9527 # ¶Ë¿Ú
+    keepalive: true # Socket²ÎÊı£¬Á¬½Ó±£»î£¬Ä¬ÈÏÖµÎªFalse¡£ÆôÓÃ¸Ã¹¦ÄÜÊ±£¬TCP»áÖ÷¶¯Ì½²â¿ÕÏĞÁ¬½ÓµÄÓĞĞ§ĞÔ¡£¿ÉÒÔ½«´Ë¹¦ÄÜÊÓÎªTCPµÄĞÄÌø»úÖÆ£¬ĞèÒª×¢ÒâµÄÊÇ£ºÄ¬ÈÏµÄĞÄÌø¼ä¸ôÊÇ7200s¼´2Ğ¡Ê±¡£NettyÄ¬ÈÏ¹Ø±Õ¸Ã¹¦ÄÜ
+    reuseaddr: true # µØÖ·¸´ÓÃ£¬Ä¬ÈÏÖµFalse¡£ÓĞËÄÖÖÇé¿ö¿ÉÒÔÊ¹ÓÃ£º(1).µ±ÓĞÒ»¸öÓĞÏàÍ¬±¾µØµØÖ·ºÍ¶Ë¿ÚµÄsocket1´¦ÓÚTIME_WAIT×´Ì¬Ê±£¬¶øÄãÏ£ÍûÆô¶¯µÄ³ÌĞòµÄsocket2ÒªÕ¼ÓÃ¸ÃµØÖ·ºÍ¶Ë¿Ú£¬±ÈÈçÖØÆô·şÎñÇÒ±£³ÖÏÈÇ°¶Ë¿Ú¡£(2).ÓĞ¶à¿éÍø¿¨»òÓÃIP Alias¼¼ÊõµÄ»úÆ÷ÔÚÍ¬Ò»¶Ë¿ÚÆô¶¯¶à¸ö½ø³Ì£¬µ«Ã¿¸ö½ø³Ì°ó¶¨µÄ±¾µØIPµØÖ·²»ÄÜÏàÍ¬¡£(3).µ¥¸ö½ø³Ì°ó¶¨ÏàÍ¬µÄ¶Ë¿Úµ½¶à¸ösocketÉÏ£¬µ«Ã¿¸ösocket°ó¶¨µÄipµØÖ·²»Í¬¡£(4).ÍêÈ«ÏàÍ¬µÄµØÖ·ºÍ¶Ë¿ÚµÄÖØ¸´°ó¶¨¡£µ«ÕâÖ»ÓÃÓÚUDPµÄ¶à²¥£¬²»ÓÃÓÚTCP¡£
+    tcpNodelay: true # TCP²ÎÊı£¬Á¢¼´·¢ËÍÊı¾İ£¬Ä¬ÈÏÖµÎªTure£¨NettyÄ¬ÈÏÎªTrue¶ø²Ù×÷ÏµÍ³Ä¬ÈÏÎªFalse£©¡£¸ÃÖµÉèÖÃNagleËã·¨µÄÆôÓÃ£¬¸ÄËã·¨½«Ğ¡µÄËéÆ¬Êı¾İÁ¬½Ó³É¸ü´óµÄ±¨ÎÄÀ´×îĞ¡»¯Ëù·¢ËÍµÄ±¨ÎÄµÄÊıÁ¿£¬Èç¹ûĞèÒª·¢ËÍÒ»Ğ©½ÏĞ¡µÄ±¨ÎÄ£¬ÔòĞèÒª½ûÓÃ¸ÃËã·¨¡£NettyÄ¬ÈÏ½ûÓÃ¸ÃËã·¨£¬´Ó¶ø×îĞ¡»¯±¨ÎÄ´«ÊäÑÓÊ±¡£
+    sndbuf: 10485760 # Socket²ÎÊı£¬TCPÊı¾İ·¢ËÍ»º³åÇø´óĞ¡¡£
+    revbuf: 10485760 # Socket²ÎÊı£¬TCPÊı¾İ½ÓÊÕ»º³åÇø´óĞ¡¡£
+    heart: 180 # ¶Á³¬Ê±Ê±¼ä
+    backlog: 1024 # ?Socket²ÎÊı£¬·şÎñ¶Ë½ÓÊÜÁ¬½ÓµÄ¶ÓÁĞ³¤¶È£¬Èç¹û¶ÓÁĞÒÑÂú£¬¿Í»§¶ËÁ¬½Ó½«±»¾Ü¾ø
+    ssl: false # Ê¹ÓÃssl¼ÓÃÜ
+    # mqttHander: com.lxr.iot.bootstrap.handler.DefaultMqttHandler # Ä¬ÈÏ´¦Àí
+    # initalDelay: 10 # mqtt qos1 qos2 ÏûÏ¢ ÖØ·¢ÑÓ³Ù
+    # protocol: MQTT  # MQTT  MQTT_WS_MQTT(mqtt.js)   MQTT_WS_PAHO(paho.js)
+    # period: 10 # mqtt qos1 qos2 ÏûÏ¢ ÖØ·¢ÖÜÆÚ

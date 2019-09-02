@@ -41,22 +41,25 @@ public class NettyServerBootstrap {
      * 开启服务器
      */
     public void start(){
+        log.info("loop");
         initEventPool();
+        log.info("group");
         bootstrap.group(bossGroup,workGroup)
                 .channel(useEpoll()? EpollServerSocketChannel.class: NioServerSocketChannel.class)
-                .option(ChannelOption.SO_REUSEADDR, serverBean.isReuseaddr())
+                //.option(ChannelOption.SO_REUSEADDR, serverBean.isReuseaddr())
                 .option(ChannelOption.SO_BACKLOG, serverBean.getBacklog())
                 .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
                 .option(ChannelOption.SO_RCVBUF, serverBean.getRevbuf())
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     protected void initChannel(SocketChannel ch) throws Exception {
                         //加载参数处理类
-                        //initHandler(ch.pipeline(),serverBean);
+                        new InitHandler().initHandler(ch.pipeline(),serverBean);
                     }
                 })
                 .childOption(ChannelOption.TCP_NODELAY, serverBean.isTcpNodelay())
                 .childOption(ChannelOption.SO_KEEPALIVE, serverBean.isKeepalive())
                 .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
+        log.info("bind");
         bootstrap.bind(IpUtils.getHost(),serverBean.getPort()).addListener((ChannelFutureListener) channelFuture -> {
             if (channelFuture.isSuccess())
                 log.info("服务端启动成功【" + IpUtils.getHost() + ":" + serverBean.getPort() + "】");

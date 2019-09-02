@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tyzn.mapper.SystemLogMapper">
+
+    <insert id="addLog">
+        INSERT INTO SYSTEM_LOG(id,log_level,operation_unit,method,args,user_id,user_name,log_describe,operation_type,run_time,return_value,ip_address)
+          VALUE(#{id},#{logLevel},#{operationUnit},#{method},#{args},#{userId},#{userName},#{logDescribe},#{operationType},#{runTime},#{returnValue},#{ipAddress});
+    </insert>
+
+</mapper>

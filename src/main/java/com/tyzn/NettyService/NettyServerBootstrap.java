@@ -14,22 +14,26 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
+@Component
 public class NettyServerBootstrap {
-
+    @Resource
     private InitBean serverBean;
 
-    public InitBean getServerBean() {
-        return serverBean;
-    }
-
-    public void setServerBean(InitBean serverBean) {
-        this.serverBean = serverBean;
-    }
+//    public InitBean getServerBean() {
+//        return serverBean;
+//    }
+//
+//    public void setServerBean(InitBean serverBean) {
+//        this.serverBean = serverBean;
+//    }
 
     private EventLoopGroup bossGroup;
 

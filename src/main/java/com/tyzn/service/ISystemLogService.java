@@ -3,6 +3,8 @@ package com.tyzn.service;
 
 import com.common.pojo.SystemLog;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -14,5 +16,7 @@ import com.common.pojo.SystemLog;
 public interface ISystemLogService {
 
     int addLog(SystemLog log);
+
+    List<SystemLog> list(SystemLog systemLog);
 
 }

@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import javax.annotation.Resource;
 
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com")
 @MapperScan("com.tyzn.project.*.mapper")
 public class TyznApplication  implements CommandLineRunner {
     @Resource

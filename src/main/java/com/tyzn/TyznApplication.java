@@ -1,6 +1,7 @@
 package com.tyzn;
 
-import com.tyzn.NettyService.bootstrap.NettyServerBootstrap;
+import com.tyzn.NettyService.NettyServerBootstrap;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,6 +10,7 @@ import javax.annotation.Resource;
 
 
 @SpringBootApplication
+@MapperScan("com.tyzn.mapper")
 public class TyznApplication  implements CommandLineRunner {
     @Resource
     private NettyServerBootstrap nettyServerBootstrap;

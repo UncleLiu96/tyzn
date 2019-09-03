@@ -29,6 +29,7 @@ import java.util.List;
 @RequestMapping("/system/device")
 public class DeviceController extends BaseController
 {
+
     private String prefix = "system/device";
 
     @Autowired

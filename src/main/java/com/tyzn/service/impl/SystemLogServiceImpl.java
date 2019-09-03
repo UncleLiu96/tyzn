@@ -23,8 +23,13 @@ public class SystemLogServiceImpl implements ISystemLogService {
     @Resource
     private SystemLogMapper logMapper;
 
+    //    @Override
+//    public int addLog(SystemLog log) {
+//        return logMapper.addLog(log);
+//    }
     @Override
-    public int addLog(SystemLog log) {
-        return logMapper.addLog(log);
+    public int addLog(SystemLog log){
+        return logMapper.insert(log);
     }
 }
+

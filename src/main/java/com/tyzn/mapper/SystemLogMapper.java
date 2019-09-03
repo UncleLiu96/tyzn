@@ -1,5 +1,6 @@
 package com.tyzn.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.common.pojo.SystemLog;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -10,6 +11,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @desc TODO
  */
 @Mapper
-public interface SystemLogMapper {
-    int addLog(SystemLog log);
+public interface SystemLogMapper extends BaseMapper<SystemLog> {
+//    int addLog(SystemLog log);
 }

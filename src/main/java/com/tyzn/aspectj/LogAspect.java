@@ -1,9 +1,9 @@
 package com.tyzn.aspectj;
 
 import com.alibaba.fastjson.JSONObject;
+import com.common.Utils.IpUtils;
 import com.common.annotation.Log;
 import com.common.pojo.SystemLog;
-import com.common.Utils.IpUtils;
 import com.tyzn.service.ISystemLogService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;

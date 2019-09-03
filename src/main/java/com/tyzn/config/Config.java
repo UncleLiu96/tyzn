@@ -1,6 +1,5 @@
 package com.tyzn.config;
 
-import com.tyzn.NettyService.NettyServerBootstrap;
 import org.springframework.stereotype.Component;
 
 /**

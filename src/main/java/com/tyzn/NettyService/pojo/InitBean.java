@@ -1,4 +1,4 @@
-package com.tyzn.NettyService;
+package com.tyzn.NettyService.pojo;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

@@ -3,7 +3,7 @@ package com.tyzn.controller;
 import com.common.annotation.Log;
 import com.common.enums.OperationType;
 import com.common.enums.OperationUnit;
-import com.tyzn.NettyService.InitBean;
+import com.tyzn.NettyService.pojo.InitBean;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

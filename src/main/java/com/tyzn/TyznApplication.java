@@ -1,6 +1,6 @@
 package com.tyzn;
 
-import com.tyzn.NettyService.NettyServerBootstrap;
+import com.tyzn.NettyService.bootstrap.NettyServerBootstrap;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

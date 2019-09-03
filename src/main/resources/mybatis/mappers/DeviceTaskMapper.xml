@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tyzn.project.task.mapper.DeviceTaskMapper">
+    
+    <resultMap type="DeviceTask" id="DeviceTaskResult">
+        <result property="rId"    column="r_id"    />
+        <result property="tId"    column="t_id"    />
+    </resultMap>
+
+    <sql id="selectDeviceTaskVo">
+        select r_id, t_id from device_task
+    </sql>
+
+    <select id="selectDeviceTaskList" parameterType="DeviceTask" resultMap="DeviceTaskResult">
+        <include refid="selectDeviceTaskVo"/>
+        <where>
+            <if test="rId != null "> and r_id = #{rId}</if>
+            <if test="tId != null "> and t_id = #{tId}</if>
+        </where>
+    </select>
+
+    <select id="selectDeviceTaskById" parameterType="Long" resultMap="DeviceTaskResult">
+        <include refid="selectDeviceTaskVo"/>
+        where r_id = #{rId}
+    </select>
+
+    <insert id="insertDeviceTask" parameterType="DeviceTask">
+        insert into device_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="rId != null ">r_id,</if>
+            <if test="tId != null ">t_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="rId != null ">#{rId},</if>
+            <if test="tId != null ">#{tId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDeviceTask" parameterType="DeviceTask">
+        update device_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tId != null ">t_id = #{tId},</if>
+        </trim>
+        where r_id = #{rId}
+    </update>
+
+    <delete id="deleteDeviceTaskById" parameterType="Long">
+        delete from device_task where r_id = #{rId}
+    </delete>
+
+    <delete id="deleteDeviceTaskByIds" parameterType="String">
+        delete from device_task where r_id in
+        <foreach item="rId" collection="array" open="(" separator="," close=")">
+            #{rId}
+        </foreach>
+    </delete>
+
+</mapper>

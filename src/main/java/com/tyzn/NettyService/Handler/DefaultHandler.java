@@ -3,13 +3,11 @@ package com.tyzn.NettyService.Handler;
 import com.tyzn.NettyService.mqtt.MqttChannelMaps;
 import com.tyzn.NettyService.mqtt.MqttHandler;
 import com.tyzn.NettyService.pojo.MqttChannel;
+import com.tyzn.NettyService.service.ISendService;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.codec.mqtt.MqttConnectMessage;
-import io.netty.handler.codec.mqtt.MqttFixedHeader;
-import io.netty.handler.codec.mqtt.MqttMessage;
-import io.netty.handler.codec.mqtt.MqttMessageType;
+import io.netty.handler.codec.mqtt.*;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.AttributeKey;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +21,9 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
 
     @Autowired
     MqttHandler mqttHandler;
+
+    @Autowired
+    ISendService sendService;
 
     protected AttributeKey<String> _clientId = AttributeKey.valueOf("clientId");
 
@@ -106,35 +107,36 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
         }
 
         MqttChannel mqttChannel = new MqttChannelMaps().getMqttChannel(channel.attr(_clientId).get());
-
+        log.info(mqttChannel.getDeviceId());
         if(mqttChannel!=null){
             switch (fixedHeader.messageType()){
                 case PUBLISH:
-
+                    //收到消息，需要根据消息类型进行相关处理。
+                    sendService.receivePublish(channel,(MqttPublishMessage) message);
                     break;
                 case SUBSCRIBE:
-
+                    //订阅主题，回复订阅确认
                     break;
                 case PINGREQ:
-
+                    //心跳，回复心跳响应
                     break;
                 case DISCONNECT:
-
+                    //关闭连接请求，无需返回，直接关闭，删除保存的信息。
                     break;
                 case UNSUBSCRIBE:
-
+                    //取消订阅，回复确认消息
                     break;
                 case PUBACK:
-
+                    //收到消息确认。
                     break;
                 case PUBREC:
-
+                    //暂时不做处理
                     break;
                 case PUBREL:
-
+                    //暂时不做处理
                     break;
                 case PUBCOMP:
-
+                    //暂时不做处理
                     break;
                 default:
                     break;

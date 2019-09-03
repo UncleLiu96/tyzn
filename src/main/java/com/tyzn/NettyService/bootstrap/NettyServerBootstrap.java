@@ -1,7 +1,9 @@
-package com.tyzn.NettyService;
+package com.tyzn.NettyService.bootstrap;
 
 import com.common.Utils.IpUtils;
 import com.common.Utils.RemotingUtil;
+import com.tyzn.NettyService.pojo.InitBean;
+import com.tyzn.NettyService.Handler.InitHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelFutureListener;
@@ -52,6 +54,7 @@ public class NettyServerBootstrap {
                 .childOption(ChannelOption.TCP_NODELAY, serverBean.isTcpNodelay())
                 .childOption(ChannelOption.SO_KEEPALIVE, serverBean.isKeepalive())
                 .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
+
         bootstrap.bind(IpUtils.getHost(),serverBean.getPort()).addListener((ChannelFutureListener) channelFuture -> {
             if (channelFuture.isSuccess())
                 log.info("服务端启动成功【" + IpUtils.getHost() + ":" + serverBean.getPort() + "】");

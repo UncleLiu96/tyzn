@@ -3,6 +3,7 @@ package com.tyzn.NettyService.mqtt;
 import com.tyzn.NettyService.enums.SessionStatus;
 import com.tyzn.NettyService.pojo.MqttChannel;
 import com.tyzn.NettyService.service.ILoginService;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.mqtt.*;
 import io.netty.util.AttributeKey;
@@ -67,6 +68,19 @@ public class MqttHandler {
         channel.writeAndFlush(message);
     }
 
+    /**
+     * 发送Qos 0  的消息
+     * @param channel
+     * @param topic
+     * @param byteBuf
+     * @param messageId
+     */
+    public void sendQos0Msg(Channel channel, String topic, byte[] byteBuf,int messageId){
+        MqttFixedHeader mqttFixedHeader = new MqttFixedHeader(MqttMessageType.PUBLISH,false, MqttQoS.AT_MOST_ONCE,false,0);
+        MqttPublishVariableHeader mqttPublishVariableHeader = new MqttPublishVariableHeader(topic,messageId );
+        MqttPublishMessage mqttPublishMessage = new MqttPublishMessage(mqttFixedHeader,mqttPublishVariableHeader, Unpooled.wrappedBuffer(byteBuf));
+        channel.writeAndFlush(mqttPublishMessage);
+    }
 
 
 }

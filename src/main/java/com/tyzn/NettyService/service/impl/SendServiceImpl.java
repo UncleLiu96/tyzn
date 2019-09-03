@@ -1,12 +1,12 @@
 package com.tyzn.NettyService.service.impl;
 
 import com.tyzn.NettyService.Utils.ByteBufUtil;
+import com.tyzn.NettyService.mqtt.ChannelMap;
+import com.tyzn.NettyService.mqtt.MqttChannelMaps;
 import com.tyzn.NettyService.service.ISendService;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
-import io.netty.handler.codec.mqtt.MqttFixedHeader;
-import io.netty.handler.codec.mqtt.MqttPublishMessage;
-import io.netty.handler.codec.mqtt.MqttPublishVariableHeader;
+import io.netty.handler.codec.mqtt.*;
 
 public class SendServiceImpl implements ISendService {
 
@@ -37,5 +37,32 @@ public class SendServiceImpl implements ISendService {
 
         //根据消息保留标志进行处理。
         //逻辑代码
+    }
+
+    /**
+     * 心跳响应，收到心跳进行响应
+     * @param channel
+     */
+    @Override
+    public void pingResp(Channel channel){
+        MqttFixedHeader fixedHeader = new MqttFixedHeader(MqttMessageType.PINGRESP,false, MqttQoS.AT_MOST_ONCE,false,0);
+        channel.writeAndFlush(fixedHeader);
+    }
+
+    /**
+     * 收到关闭连接消息，进行关闭，遗嘱发布，保留回话等操作
+     * @param clientId
+     */
+    @Override
+    public void closeConnect(String clientId){
+        MqttChannelMaps map = new MqttChannelMaps();
+        map.removeMqttChannel(clientId);
+
+        ChannelMap channelMap = new ChannelMap();
+        Channel channel = channelMap.getChannel(clientId);
+        channel.close();
+        channelMap.removeChannel(clientId);
+        //保持会话功能省略，默认不保存会话直接删除
+        //遗嘱功能省略，默认无遗嘱
     }
 }

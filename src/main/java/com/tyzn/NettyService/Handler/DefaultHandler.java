@@ -119,9 +119,11 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
                     break;
                 case PINGREQ:
                     //心跳，回复心跳响应
+                    sendService.pingResp(channel);
                     break;
                 case DISCONNECT:
                     //关闭连接请求，无需返回，直接关闭，删除保存的信息。
+                    sendService.closeConnect(channel.attr(_clientId).get());
                     break;
                 case UNSUBSCRIBE:
                     //取消订阅，回复确认消息

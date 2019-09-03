@@ -5,4 +5,8 @@ import io.netty.handler.codec.mqtt.MqttPublishMessage;
 
 public interface ISendService {
     void receivePublish(Channel channel, MqttPublishMessage message);
+
+    void pingResp(Channel channel);
+
+    void closeConnect(String clientId);
 }

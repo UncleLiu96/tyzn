@@ -25,6 +25,7 @@ mybatis-plus:
     use-generated-keys: true #获取数据库自增列
     use-column-label: true #使用列别名替换列名
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  r
 
 # netty服务器配置
 tyzn:

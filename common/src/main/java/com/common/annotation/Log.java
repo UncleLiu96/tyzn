@@ -18,7 +18,7 @@ public @interface Log {
     String detail() default "";
 
     /**
-     * 日志等级:自己定，此处分为1-9
+     * 日志等级:登录=1、增加=2、修改=3、删除=4
      */
     int level() default 0;
 

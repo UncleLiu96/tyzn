@@ -3,8 +3,8 @@ package com.tyzn.aspectj;
 import com.alibaba.fastjson.JSONObject;
 import com.common.Utils.IpUtils;
 import com.common.annotation.Log;
-import com.common.pojo.SystemLog;
-import com.tyzn.service.ISystemLogService;
+import com.tyzn.project.log.domain.SystemLog;
+import com.tyzn.project.log.service.ISystemLogService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
@@ -87,7 +87,7 @@ public class LogAspect {
         }
         //TODO 这里保存日志
         System.out.println("记录日志:" + operationLog.toString());
-        int i = logService.addLog(operationLog);
+        int i = logService.insertSystemLog(operationLog);
         System.out.println(i);
     }
 

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tyzn.project.device.mapper.RadiotubeDeviceMapper">
+    
+    <resultMap type="RadiotubeDevice" id="RadiotubeDeviceResult">
+        <result property="id"    column="id"    />
+        <result property="radiotubeNumber"    column="radiotube_number"    />
+        <result property="radiotubeName"    column="radiotube_name"    />
+        <result property="dictId"    column="dict_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectRadiotubeDeviceVo">
+        select id, radiotube_number, radiotube_name, dict_id, create_time, update_time from radiotube_device
+    </sql>
+
+    <select id="selectRadiotubeDeviceList" parameterType="RadiotubeDevice" resultMap="RadiotubeDeviceResult">
+        <include refid="selectRadiotubeDeviceVo"/>
+        <where>
+            <if test="radiotubeNumber != null  and radiotubeNumber != ''"> and radiotube_number = #{radiotubeNumber}</if>
+            <if test="radiotubeName != null  and radiotubeName != ''"> and radiotube_name like concat('%', #{radiotubeName}, '%')</if>
+            <if test="dictId != null "> and dict_id = #{dictId}</if>
+        </where>
+    </select>
+
+    <select id="selectRadiotubeDeviceById" parameterType="Long" resultMap="RadiotubeDeviceResult">
+        <include refid="selectRadiotubeDeviceVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertRadiotubeDevice" parameterType="RadiotubeDevice" useGeneratedKeys="true" keyProperty="id">
+        insert into radiotube_device
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="radiotubeNumber != null  and radiotubeNumber != ''">radiotube_number,</if>
+            <if test="radiotubeName != null  and radiotubeName != ''">radiotube_name,</if>
+            <if test="dictId != null ">dict_id,</if>
+            <if test="createTime != null ">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="radiotubeNumber != null  and radiotubeNumber != ''">#{radiotubeNumber},</if>
+            <if test="radiotubeName != null  and radiotubeName != ''">#{radiotubeName},</if>
+            <if test="dictId != null ">#{dictId},</if>
+            <if test="createTime != null ">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRadiotubeDevice" parameterType="RadiotubeDevice">
+        update radiotube_device
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="radiotubeNumber != null  and radiotubeNumber != ''">radiotube_number = #{radiotubeNumber},</if>
+            <if test="radiotubeName != null  and radiotubeName != ''">radiotube_name = #{radiotubeName},</if>
+            <if test="dictId != null ">dict_id = #{dictId},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRadiotubeDeviceById" parameterType="Long">
+        delete from radiotube_device where id = #{id}
+    </delete>
+
+    <delete id="deleteRadiotubeDeviceByIds" parameterType="String">
+        delete from radiotube_device where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

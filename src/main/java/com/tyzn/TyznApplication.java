@@ -10,7 +10,7 @@ import javax.annotation.Resource;
 
 
 @SpringBootApplication
-@MapperScan("com.tyzn.mapper")
+@MapperScan("com.tyzn.project.*.mapper")
 public class TyznApplication  implements CommandLineRunner {
     @Resource
     private NettyServerBootstrap nettyServerBootstrap;

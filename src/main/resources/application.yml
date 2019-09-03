@@ -25,7 +25,7 @@ mybatis-plus:
     use-generated-keys: true #获取数据库自增列
     use-column-label: true #使用列别名替换列名
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-  r
+  type-aliases-package: com.tyzn.project #实体类配置别名
 
 # netty服务器配置
 tyzn:
@@ -46,3 +46,10 @@ tyzn:
     # initalDelay: 10 # mqtt qos1 qos2 消息 重发延迟
     # protocol: MQTT  # MQTT  MQTT_WS_MQTT(mqtt.js)   MQTT_WS_PAHO(paho.js)
     # period: 10 # mqtt qos1 qos2 消息 重发周期
+
+  # 名称
+  name: TYZN
+  # 版本
+  version: 1.0
+  # 版权年份
+  copyrightYear: 2019

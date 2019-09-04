@@ -12,8 +12,8 @@ public class InitHandler {
     public void initHandler(ChannelPipeline ch, InitBean initBean) {
 
         /*编解码方式，后续根据协议，自己定义编解码方式*/
-        ch.addLast("MqttEncoder",MqttEncoder.INSTANCE);
-        ch.addLast("MqttDecoder",new MqttDecoder());
+        ch.addLast("encoder",MqttEncoder.INSTANCE);
+        ch.addLast("decoder",new MqttDecoder());
         /*心跳设定*/
         ch.addLast(new IdleStateHandler(initBean.getHeart(),0,0));
         /*通信处理类，处理连接，断开，收到信息等处理*/

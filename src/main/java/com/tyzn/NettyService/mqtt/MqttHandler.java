@@ -39,7 +39,6 @@ public class MqttHandler {
             connack(channel,MqttConnectReturnCode.CONNECTION_REFUSED_BAD_USER_NAME_OR_PASSWORD);
             return false;
         }
-
         MqttChannel mqttChannel = MqttChannel.builder().
                 deviceId(clientId)
                 .sessionStatus(SessionStatus.ONLINE)
@@ -49,12 +48,10 @@ public class MqttHandler {
         ChannelMap map = new ChannelMap();
         map.addChannel(clientId,channel);
 
-
         AttributeKey<String> _clientId = AttributeKey.valueOf("clientId");
         AttributeKey<Boolean> _login = AttributeKey.valueOf("login");
         channel.attr(_login).set(true);
         channel.attr(_clientId).set(clientId);
-
         connack(channel,MqttConnectReturnCode.CONNECTION_ACCEPTED);
         return true;
     }

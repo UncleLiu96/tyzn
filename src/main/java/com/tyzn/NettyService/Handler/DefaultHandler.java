@@ -12,12 +12,18 @@ import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.AttributeKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
 
 /**
  * 通信处理类，处理连接，断开，接收消息，心跳，异常等。
  */
 @Slf4j
+@Component
 public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
+
+    public static DefaultHandler defaultHandler;
 
     @Autowired
     MqttHandler mqttHandler;
@@ -26,6 +32,20 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
     ISendService sendService;
 
     protected AttributeKey<String> _clientId = AttributeKey.valueOf("clientId");
+
+    public DefaultHandler(){
+
+    }
+
+    /**
+     * 解决无法注入问题
+     */
+    @PostConstruct
+    public void init(){
+        defaultHandler = this;
+        defaultHandler.mqttHandler = this.mqttHandler;
+        defaultHandler.sendService = this.sendService;
+    }
 
     /**
      *
@@ -57,13 +77,13 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
             String clientId = channel.attr(_clientId).get();
             switch (e.state()) {
                 case READER_IDLE:   //读
-                    sendService.closeChannel(channel,clientId);
+                    defaultHandler.sendService.closeChannel(channel,clientId);
                     break;
                 case WRITER_IDLE:   //写
-                    sendService.closeChannel(channel,clientId);
+                    defaultHandler.sendService.closeChannel(channel,clientId);
                     break;
                 case ALL_IDLE:  //读写都有
-                    sendService.closeChannel(channel,clientId);
+                    defaultHandler.sendService.closeChannel(channel,clientId);
                     break;
                 default:
                     break;
@@ -98,45 +118,45 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, MqttMessage message) throws Exception {
         log.info("收到消息");
         log.info("【" + channelHandlerContext.channel().id() + "】" + " :" + message);
+        log.info("消息："+message.decoderResult());
         //channelHandlerContext.writeAndFlush("你好"+channelHandlerContext.channel().id());
         Channel channel = channelHandlerContext.channel();
         MqttFixedHeader fixedHeader = message.fixedHeader();
         //第一步登陆
         if(fixedHeader.messageType().equals(MqttMessageType.CONNECT)){
-            if(!mqttHandler.login(channel,(MqttConnectMessage) message)){
+            if(!defaultHandler.mqttHandler.login(channel,(MqttConnectMessage) message)){
                 channel.close();
             }
             return;
         }
-
         MqttChannel mqttChannel = new MqttChannelMaps().getMqttChannel(channel.attr(_clientId).get());
-        log.info(mqttChannel.getDeviceId());
+        String clientId = channel.attr(_clientId).get();
         if(mqttChannel!=null){
             switch (fixedHeader.messageType()){
                 case PUBLISH:
                     //收到消息，需要根据消息类型进行相关处理。
-                    sendService.receivePublish(channel,(MqttPublishMessage) message);
+                    defaultHandler.sendService.receivePublish(channel,(MqttPublishMessage) message);
                     break;
                 case SUBSCRIBE:
                     //订阅主题，回复订阅确认
-                    sendService.receiveSubscribe(channel,(MqttSubscribeMessage) message,channel.attr(_clientId).get());
+                    defaultHandler.sendService.receiveSubscribe(channel,(MqttSubscribeMessage) message,clientId);
                     break;
                 case PINGREQ:
                     //心跳，回复心跳响应
-                    sendService.receivePing(channel);
+                    defaultHandler.sendService.receivePing(channel);
                     break;
                 case DISCONNECT:
                     //关闭连接请求，无需返回，直接关闭，删除保存的信息。
-                    sendService.closeConnect(channel.attr(_clientId).get());
+                    defaultHandler.sendService.closeConnect(clientId);
                     break;
                 case UNSUBSCRIBE:
                     //取消订阅，回复确认消息
-                    sendService.receiveUnSubscribe(channel,(MqttUnsubscribeMessage) message,channel.attr(_clientId).get());
+                    defaultHandler.sendService.receiveUnSubscribe(channel,(MqttUnsubscribeMessage) message,clientId);
                     break;
                 case PUBACK:
                     //收到消息确认。
                     //保证能收到消息，但是可能会重复。进行对应的处理。
-                    sendService.receivePuback(channel);
+                    defaultHandler.sendService.receivePuback(channel);
                     break;
                 case PUBREC:
                     //暂时不做处理

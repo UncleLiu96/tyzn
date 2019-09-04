@@ -1,12 +1,6 @@
 package com.tyzn.NettyService.mqtt;
 
 import io.netty.channel.Channel;
-import io.netty.channel.group.ChannelGroup;
-import io.netty.channel.group.ChannelGroupFuture;
-import io.netty.channel.group.ChannelMatcher;
-import io.netty.channel.group.DefaultChannelGroup;
-import io.netty.handler.codec.mqtt.MqttMessage;
-import io.netty.util.concurrent.GlobalEventExecutor;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

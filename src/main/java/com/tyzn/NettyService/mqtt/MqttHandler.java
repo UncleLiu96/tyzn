@@ -11,6 +11,9 @@ import io.netty.util.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  *  Mqtt消息功能类
@@ -81,6 +84,47 @@ public class MqttHandler {
         MqttPublishMessage mqttPublishMessage = new MqttPublishMessage(mqttFixedHeader,mqttPublishVariableHeader, Unpooled.wrappedBuffer(byteBuf));
         channel.writeAndFlush(mqttPublishMessage);
     }
+
+    /**
+     * 发送心跳响应，收到心跳进行响应
+     * @param channel
+     */
+    public void pingResp(Channel channel){
+        MqttFixedHeader fixedHeader = new MqttFixedHeader(MqttMessageType.PINGRESP,false, MqttQoS.AT_MOST_ONCE,false,0);
+        channel.writeAndFlush(fixedHeader);
+    }
+
+    /**
+     * 收到订阅消息，之后返回对应的QOS等级列表
+     * @param channel
+     * @param message
+     * @param qos
+     */
+    public void suback(Channel channel,MqttSubscribeMessage message,int qos){
+        MqttFixedHeader fixedHeader = new MqttFixedHeader(MqttMessageType.SUBACK,false,MqttQoS.AT_MOST_ONCE,false,0);
+        MqttMessageIdVariableHeader idVariableHeader = MqttMessageIdVariableHeader.from(message.variableHeader().messageId());
+        List<Integer> qosList = new ArrayList<>(qos);
+        for (int i=0;i<qos;i++){
+            qosList.add(message.payload().topicSubscriptions().get(i).qualityOfService().value());
+        }
+        MqttSubAckPayload payload = new MqttSubAckPayload(qosList);
+        MqttSubAckMessage subAckMessage = new MqttSubAckMessage(fixedHeader,idVariableHeader,payload);
+        channel.writeAndFlush(subAckMessage);
+    }
+
+    /**
+     * 收到取消订阅消息，返回报文
+     * @param channel
+     * @param message
+     */
+    public void unSuback(Channel channel,MqttUnsubscribeMessage message){
+        MqttFixedHeader fixedHeader = new MqttFixedHeader(MqttMessageType.UNSUBACK,false,MqttQoS.AT_MOST_ONCE,false,0x02);
+        MqttMessageIdVariableHeader idVariableHeader = MqttMessageIdVariableHeader.from(message.variableHeader().messageId());
+        MqttUnsubAckMessage unsubAckMessage = new MqttUnsubAckMessage(fixedHeader,idVariableHeader);
+        channel.writeAndFlush(unsubAckMessage);
+    }
+
+
 
 
 }

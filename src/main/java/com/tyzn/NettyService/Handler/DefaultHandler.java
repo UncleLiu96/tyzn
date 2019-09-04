@@ -42,7 +42,7 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
     }
 
     /**
-     *
+     * 心跳超时处理
      * @param ctx
      * @param evt
      * @throws Exception
@@ -52,15 +52,18 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof IdleStateEvent) {
             IdleStateEvent e = (IdleStateEvent) evt;
+            log.info("心跳超时，关闭channel");
+            Channel channel = ctx.channel();
+            String clientId = channel.attr(_clientId).get();
             switch (e.state()) {
                 case READER_IDLE:   //读
-
+                    sendService.closeChannel(channel,clientId);
                     break;
                 case WRITER_IDLE:   //写
-
+                    sendService.closeChannel(channel,clientId);
                     break;
                 case ALL_IDLE:  //读写都有
-
+                    sendService.closeChannel(channel,clientId);
                     break;
                 default:
                     break;
@@ -116,10 +119,11 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
                     break;
                 case SUBSCRIBE:
                     //订阅主题，回复订阅确认
+                    sendService.receiveSubscribe(channel,(MqttSubscribeMessage) message,channel.attr(_clientId).get());
                     break;
                 case PINGREQ:
                     //心跳，回复心跳响应
-                    sendService.pingResp(channel);
+                    sendService.receivePing(channel);
                     break;
                 case DISCONNECT:
                     //关闭连接请求，无需返回，直接关闭，删除保存的信息。
@@ -127,9 +131,12 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
                     break;
                 case UNSUBSCRIBE:
                     //取消订阅，回复确认消息
+                    sendService.receiveUnSubscribe(channel,(MqttUnsubscribeMessage) message,channel.attr(_clientId).get());
                     break;
                 case PUBACK:
                     //收到消息确认。
+                    //保证能收到消息，但是可能会重复。进行对应的处理。
+                    sendService.receivePuback(channel);
                     break;
                 case PUBREC:
                     //暂时不做处理

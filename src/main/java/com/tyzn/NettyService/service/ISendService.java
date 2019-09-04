@@ -2,11 +2,21 @@ package com.tyzn.NettyService.service;
 
 import io.netty.channel.Channel;
 import io.netty.handler.codec.mqtt.MqttPublishMessage;
+import io.netty.handler.codec.mqtt.MqttSubscribeMessage;
+import io.netty.handler.codec.mqtt.MqttUnsubscribeMessage;
 
 public interface ISendService {
     void receivePublish(Channel channel, MqttPublishMessage message);
 
-    void pingResp(Channel channel);
+    void receivePing(Channel channel);
 
     void closeConnect(String clientId);
+
+    void receivePuback(Channel channel);
+
+    void receiveSubscribe(Channel channel, MqttSubscribeMessage message,String clientId);
+
+    void receiveUnSubscribe(Channel channel, MqttUnsubscribeMessage message, String clientId);
+
+    void closeChannel(Channel channel,String clientId);
 }

@@ -1,14 +1,26 @@
 package com.tyzn.NettyService.service.impl;
 
 import com.tyzn.NettyService.Utils.ByteBufUtil;
+import com.tyzn.NettyService.enums.SessionStatus;
 import com.tyzn.NettyService.mqtt.ChannelMap;
 import com.tyzn.NettyService.mqtt.MqttChannelMaps;
+import com.tyzn.NettyService.mqtt.MqttHandler;
+import com.tyzn.NettyService.pojo.MqttChannel;
 import com.tyzn.NettyService.service.ISendService;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.mqtt.*;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class SendServiceImpl implements ISendService {
+
+    @Autowired
+    MqttHandler handler;
 
     /**
      * 收到publish消息。
@@ -44,9 +56,8 @@ public class SendServiceImpl implements ISendService {
      * @param channel
      */
     @Override
-    public void pingResp(Channel channel){
-        MqttFixedHeader fixedHeader = new MqttFixedHeader(MqttMessageType.PINGRESP,false, MqttQoS.AT_MOST_ONCE,false,0);
-        channel.writeAndFlush(fixedHeader);
+    public void receivePing(Channel channel){
+        handler.pingResp(channel);
     }
 
     /**
@@ -65,4 +76,69 @@ public class SendServiceImpl implements ISendService {
         //保持会话功能省略，默认不保存会话直接删除
         //遗嘱功能省略，默认无遗嘱
     }
+
+    /**
+     * 收到消息确认，表示对方收到消息了。
+     * @param channel
+     */
+    @Override
+    public void receivePuback(Channel channel){
+        //对方收到消息了，正常来说这边要保存发送未完成的消息。待对方收到消息，移除对应的消息,或者标记为已完成
+    }
+
+    /**
+     * 收到订阅消息，处理之后返回suback消息
+     * @param channel
+     * @param message
+     */
+    @Override
+    public void receiveSubscribe(Channel channel,MqttSubscribeMessage message,String clientId){
+        Set<String> topics = message.payload().topicSubscriptions().stream().map(
+                mqttTopicSubscription ->
+                mqttTopicSubscription.topicName()
+        ).collect(Collectors.toSet());
+        MqttChannel mqttChannel = new MqttChannelMaps().getMqttChannel(clientId);
+        if(mqttChannel!=null){
+            Set<String> mqttTopic = mqttChannel.getTopic();
+            for (String item : topics) {
+                mqttTopic.add(item);
+            }
+            mqttChannel.setTopic(mqttTopic);
+        }
+        handler.suback(channel,message,topics.size());
+    }
+
+    /**
+     * 收到取消订阅消息，取消列表中订阅的主题
+     * @param channel
+     * @param message
+     * @param clientId
+     */
+    @Override
+    public void receiveUnSubscribe(Channel channel,MqttUnsubscribeMessage message,String clientId){
+        List<String> topics = message.payload().topics();
+        MqttChannel mqttChannel = new MqttChannelMaps().getMqttChannel(clientId);
+        if(mqttChannel!=null) {
+            Set<String> mqttTopic = mqttChannel.getTopic();
+            for (String item : topics) {
+                mqttTopic.remove(item);
+            }
+            mqttChannel.setTopic(mqttTopic);
+        }
+        handler.unSuback(channel,message);
+    }
+
+    /**
+     * 关闭channel ，将状态改为 关闭。
+     * @param channel
+     * @param clientId
+     */
+    @Override
+    public void closeChannel(Channel channel,String clientId){
+        MqttChannel mqttChannel = new MqttChannelMaps().getMqttChannel(clientId);
+        mqttChannel.setSessionStatus(SessionStatus.OFFLINE);
+        channel.close();
+    }
+
+
 }

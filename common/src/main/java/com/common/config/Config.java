@@ -1,4 +1,4 @@
-package com.tyzn.config;
+package com.common.config;
 
 import org.springframework.stereotype.Component;
 

@@ -1,6 +1,6 @@
 package com.tyzn.NettyService.service.impl;
 
-import com.tyzn.NettyService.Utils.ByteBufUtil;
+import com.tyzn.NettyService.Utils.ByteBufUtils;
 import com.tyzn.NettyService.enums.SessionStatus;
 import com.tyzn.NettyService.mqtt.ChannelMap;
 import com.tyzn.NettyService.mqtt.MqttChannelMaps;
@@ -13,7 +13,6 @@ import io.netty.handler.codec.mqtt.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,12 +30,12 @@ public class SendServiceImpl implements ISendService {
         MqttFixedHeader fixedHeader = message.fixedHeader();
         MqttPublishVariableHeader variableHeader = message.variableHeader();
         ByteBuf payload = message.payload();
-        byte[] bytes = ByteBufUtil.copyByteBuf(payload);
         int messageId = variableHeader.messageId();
         //判断是什么设备消息，处理....
         //逻辑代码
         switch (fixedHeader.qosLevel()) {
-            case AT_MOST_ONCE: // 至多一次,不需要处理。
+            case AT_MOST_ONCE: // 至多一次,不需要回应。拿到消息直接处理就可以了
+                System.out.println("收到QOS 0 的消息:"+ByteBufUtils.convertByteBufToString(payload));
                 break;
             case AT_LEAST_ONCE:
                 //回复发布确认，响应qos1 等级的消息
@@ -139,6 +138,20 @@ public class SendServiceImpl implements ISendService {
         MqttChannel mqttChannel = new MqttChannelMaps().getMqttChannel(clientId);
         mqttChannel.setSessionStatus(SessionStatus.OFFLINE);
         channel.close();
+    }
+
+    /**
+     * 发送qos0 的消息到指定客户端
+     * @param channel
+     * @param clientId
+     * @param msg
+     */
+    @Override
+    public void send2ClientQos0(Channel channel,String clientId,String msg){
+        MqttChannel mqttChannel = new MqttChannelMaps().getMqttChannel(clientId);
+        if(mqttChannel.getSessionStatus().equals(SessionStatus.ONLINE)){
+            handler.sendQos0Msg(channel,"",msg.getBytes(),mqttChannel.messageId());
+        }
     }
 
 

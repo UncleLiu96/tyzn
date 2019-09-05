@@ -19,4 +19,6 @@ public interface ISendService {
     void receiveUnSubscribe(Channel channel, MqttUnsubscribeMessage message, String clientId);
 
     void closeChannel(Channel channel,String clientId);
+
+    void send2ClientQos0(Channel channel,String clientId,String msg);
 }

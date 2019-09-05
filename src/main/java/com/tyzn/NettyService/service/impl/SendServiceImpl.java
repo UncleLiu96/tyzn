@@ -8,11 +8,13 @@ import com.tyzn.NettyService.mqtt.MqttHandler;
 import com.tyzn.NettyService.pojo.MqttChannel;
 import com.tyzn.NettyService.service.ISendService;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.mqtt.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -99,9 +101,10 @@ public class SendServiceImpl implements ISendService {
         ).collect(Collectors.toSet());
         MqttChannel mqttChannel = new MqttChannelMaps().getMqttChannel(clientId);
         if(mqttChannel!=null){
-            Set<String> mqttTopic = mqttChannel.getTopic();
+            Set<String> mqttTopic = mqttChannel.getTopic()==null ? new HashSet<>() : mqttChannel.getTopic();
             for (String item : topics) {
                 mqttTopic.add(item);
+                System.out.println("主题"+item);
             }
             mqttChannel.setTopic(mqttTopic);
         }

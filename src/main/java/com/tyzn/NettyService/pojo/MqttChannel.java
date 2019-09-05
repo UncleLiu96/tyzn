@@ -26,6 +26,7 @@ public class MqttChannel {
     private AtomicInteger index ; //原子操作的操作索引
 
     public int messageId(){
+        index = new AtomicInteger();
         for (;;) {
             int current = index.get();
             int next = (current >= Short.MAX_VALUE ? 0: current + 1);

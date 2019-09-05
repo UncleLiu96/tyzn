@@ -129,6 +129,7 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
             }
             return;
         }
+
         MqttChannel mqttChannel = new MqttChannelMaps().getMqttChannel(channel.attr(_clientId).get());
         String clientId = channel.attr(_clientId).get();
         if(mqttChannel!=null){
@@ -140,6 +141,7 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
                 case SUBSCRIBE:
                     //订阅主题，回复订阅确认
                     defaultHandler.sendService.receiveSubscribe(channel,(MqttSubscribeMessage) message,clientId);
+                    defaultHandler.sendService.send2ClientQos0(channel,clientId,"发送给灯杆一组");
                     break;
                 case PINGREQ:
                     //心跳，回复心跳响应

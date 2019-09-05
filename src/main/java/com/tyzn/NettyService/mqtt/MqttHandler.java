@@ -88,7 +88,8 @@ public class MqttHandler {
      */
     public void pingResp(Channel channel){
         MqttFixedHeader fixedHeader = new MqttFixedHeader(MqttMessageType.PINGRESP,false, MqttQoS.AT_MOST_ONCE,false,0);
-        channel.writeAndFlush(fixedHeader);
+        MqttMessage message = new MqttMessage(fixedHeader);
+        channel.writeAndFlush(message);
     }
 
     /**

@@ -21,4 +21,7 @@ public interface ISendService {
     void closeChannel(Channel channel,String clientId);
 
     void send2ClientQos0(Channel channel,String clientId,String msg);
+
+    void pushTopic(String topic,String msg);
 }
+

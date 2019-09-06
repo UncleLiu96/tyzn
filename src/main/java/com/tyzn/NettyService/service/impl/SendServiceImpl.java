@@ -8,15 +8,12 @@ import com.tyzn.NettyService.mqtt.MqttHandler;
 import com.tyzn.NettyService.pojo.MqttChannel;
 import com.tyzn.NettyService.service.ISendService;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.mqtt.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 @Service
 public class SendServiceImpl implements ISendService {
@@ -157,5 +154,24 @@ public class SendServiceImpl implements ISendService {
         }
     }
 
+    /**
+     * 推送消息到指定主题，订阅该主题的客户端都能收到消息
+     * @param topic
+     * @param msg
+     */
+    @Override
+    public void pushTopic(String topic,String msg){
+        Collection<MqttChannel> channels = new MqttChannelMaps().getMqttChannelMaps().values();
+        channels.parallelStream().forEach(mqttChannel -> {
+            if(mqttChannel.getSessionStatus().equals(SessionStatus.ONLINE)) {
+                mqttChannel.getTopic().forEach(topics -> {
+                    //if (topics.equals(topic)) {
+                        //默认推送 QOS 0 的消息，后续需要再加处理
+                        handler.sendQosMsg(new ChannelMap().getChannel(mqttChannel.getDeviceId()),topic,msg.getBytes(),mqttChannel.messageId(),MqttQoS.AT_MOST_ONCE);
+                    //}
+                });
+            }
+        });
+    }
 
 }

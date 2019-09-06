@@ -123,9 +123,19 @@ public class MqttHandler {
     }
 
 
-
-    public void pushTopic(){
-
+    /**
+     * 发送QOS等级 1,2 的消息
+     * @param channel
+     * @param topic
+     * @param byteBuf
+     * @param messageId
+     * @param qos
+     */
+    public void sendQosMsg(Channel channel,String topic,byte[] byteBuf,int messageId,MqttQoS qos){
+        MqttFixedHeader mqttFixedHeader = new MqttFixedHeader(MqttMessageType.PUBLISH,false, qos,false,0);
+        MqttPublishVariableHeader mqttPublishVariableHeader = new MqttPublishVariableHeader(topic,messageId );
+        MqttPublishMessage mqttPublishMessage = new MqttPublishMessage(mqttFixedHeader,mqttPublishVariableHeader, Unpooled.wrappedBuffer(byteBuf));
+        channel.writeAndFlush(mqttPublishMessage);
     }
 
 

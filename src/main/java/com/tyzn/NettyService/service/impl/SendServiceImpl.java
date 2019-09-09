@@ -160,15 +160,28 @@ public class SendServiceImpl implements ISendService {
      * @param msg
      */
     @Override
-    public void pushTopic(String topic,String msg){
+    public void pushTopic(String topic,String msg,MqttQoS qos){
         Collection<MqttChannel> channels = new MqttChannelMaps().getMqttChannelMaps().values();
         channels.parallelStream().forEach(mqttChannel -> {
             if(mqttChannel.getSessionStatus().equals(SessionStatus.ONLINE)) {
                 mqttChannel.getTopic().forEach(topics -> {
-                    //if (topics.equals(topic)) {
-                        //默认推送 QOS 0 的消息，后续需要再加处理
-                        handler.sendQosMsg(new ChannelMap().getChannel(mqttChannel.getDeviceId()),topic,msg.getBytes(),mqttChannel.messageId(),MqttQoS.AT_MOST_ONCE);
-                    //}
+                    if (topics.equals(topic)) {
+                        switch (qos){
+                            case AT_MOST_ONCE:
+                                //发送qos0消息
+                                handler.sendQosMsg(new ChannelMap().getChannel(mqttChannel.getDeviceId()),topic,msg.getBytes(),mqttChannel.messageId(),qos);
+                                break;
+                            case AT_LEAST_ONCE:
+                                //发送qos1消息，收到回复之前，要存储消息并且标记未完成。
+                                break;
+                            case EXACTLY_ONCE:
+                                //发送qos2消息，收到第一次回复之前，要存储消息并且标记未完成。
+                                break;
+                            default:
+                                //默认发送qos0
+                                break;
+                        }
+                    }
                 });
             }
         });

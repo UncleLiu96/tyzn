@@ -142,7 +142,7 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
                     //订阅主题，回复订阅确认
                     defaultHandler.sendService.receiveSubscribe(channel,(MqttSubscribeMessage) message,clientId);
                     //defaultHandler.sendService.send2ClientQos0(channel,clientId,"发送给灯杆一组");
-                    defaultHandler.sendService.pushTopic("$lamppost09/123456","发送主题消息测试");
+                    defaultHandler.sendService.pushTopic("lamppost09","发送主题消息测试",MqttQoS.AT_MOST_ONCE);
                     break;
                 case PINGREQ:
                     //心跳，回复心跳响应

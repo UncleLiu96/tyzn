@@ -5,6 +5,7 @@ import com.tyzn.NettyService.pojo.MqttChannel;
 import com.tyzn.NettyService.service.ILoginService;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.handler.codec.mqtt.*;
 import io.netty.util.AttributeKey;
 import io.netty.util.internal.StringUtil;
@@ -135,7 +136,76 @@ public class MqttHandler {
         MqttFixedHeader mqttFixedHeader = new MqttFixedHeader(MqttMessageType.PUBLISH,false, qos,false,0);
         MqttPublishVariableHeader mqttPublishVariableHeader = new MqttPublishVariableHeader(topic,messageId );
         MqttPublishMessage mqttPublishMessage = new MqttPublishMessage(mqttFixedHeader,mqttPublishVariableHeader, Unpooled.wrappedBuffer(byteBuf));
-        channel.writeAndFlush(mqttPublishMessage);
+        ChannelFuture future = channel.writeAndFlush(mqttPublishMessage);
+        if(future.isSuccess()){
+            //保存下来，收到回复之前不删除，一定时间内没收到消息，则重发
+            MqttMessageMaps messageMaps = new MqttMessageMaps();
+            messageMaps.setMqttMessages(messageId,mqttPublishMessage);
+        }
+    }
+
+
+    /**
+     * 收到qos等级1的publish消息，给出回复。
+     * @param channel
+     * @param messageId
+     */
+    public void puback(Channel channel,int messageId){
+        MqttFixedHeader fixedHeader = new MqttFixedHeader(MqttMessageType.PUBACK, false, MqttQoS.AT_LEAST_ONCE, false, 0x02);
+        MqttMessageIdVariableHeader variableHeader = MqttMessageIdVariableHeader.from(messageId);
+        MqttPubAckMessage message = new MqttPubAckMessage(fixedHeader, variableHeader);
+        channel.writeAndFlush(message);
+    }
+
+    /**
+     * 收到Qos等级2的publish消息，给出第一次回复。
+     * @param channel
+     * @param messageId
+     */
+    public void pubrec(Channel channel,int messageId){
+        MqttFixedHeader fixedHeader = new MqttFixedHeader(MqttMessageType.PUBREC, false, MqttQoS.AT_LEAST_ONCE, false, 0x02);
+        MqttMessageIdVariableHeader variableHeader = MqttMessageIdVariableHeader.from(messageId);
+        MqttPubAckMessage message = new MqttPubAckMessage(fixedHeader, variableHeader);
+        ChannelFuture future = channel.writeAndFlush(message);
+        if(future.isSuccess()){
+            //保存下来，收到下一步回复之前不删除，一定时间内没收到消息，则重发
+            MqttMessageMaps messageMaps = new MqttMessageMaps();
+            messageMaps.setMqttMessages(messageId,message);
+        }
+    }
+
+    /**
+     * 收到pubrec消息，给出回复
+     * @param channel
+     * @param messageId
+     */
+    public void pubrel(Channel channel,int messageId) {
+        MqttFixedHeader fixedHeader = new MqttFixedHeader(MqttMessageType.PUBREL, false,MqttQoS.AT_LEAST_ONCE, false, 0x02);
+        MqttMessageIdVariableHeader variableHeader = MqttMessageIdVariableHeader.from(messageId);
+        MqttPubAckMessage message = new MqttPubAckMessage(fixedHeader, variableHeader);
+        ChannelFuture future = channel.writeAndFlush(message);
+        if(future.isSuccess()){
+            //修改上一步状态，收到下一步回复之前不删除，一定时间内没收到消息，则重发
+            MqttMessageMaps messageMaps = new MqttMessageMaps();
+            messageMaps.setMqttMessages(messageId,message);
+        }
+    }
+
+    /**
+     * 收到pubrel消息，给出最后回复。回复完成本次通讯也就完成了，QOS等级2的最后一个报文
+     * @param channel
+     * @param messageId
+     */
+    public void pubcomp(Channel channel,int messageId) {
+        MqttFixedHeader fixedHeader = new MqttFixedHeader(MqttMessageType.PUBCOMP, false, MqttQoS.AT_MOST_ONCE, false, 0x02);
+        MqttMessageIdVariableHeader variableHeader = MqttMessageIdVariableHeader.from(messageId);
+        MqttPubAckMessage message = new MqttPubAckMessage(fixedHeader, variableHeader);
+        ChannelFuture future = channel.writeAndFlush(message);
+        if(future.isSuccess()){
+            //当最后一个消息发送成功之后，删除当前消息状态
+            MqttMessageMaps messageMaps = new MqttMessageMaps();
+            messageMaps.removeMqttMessage(messageId);
+        }
     }
 
 

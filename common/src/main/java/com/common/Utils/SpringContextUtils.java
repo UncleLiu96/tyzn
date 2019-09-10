@@ -1,4 +1,4 @@
-package com.tyzn.project.job.core;
+package com.common.Utils;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

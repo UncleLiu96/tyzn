@@ -5,6 +5,7 @@ import com.tyzn.NettyService.enums.SessionStatus;
 import com.tyzn.NettyService.mqtt.ChannelMap;
 import com.tyzn.NettyService.mqtt.MqttChannelMaps;
 import com.tyzn.NettyService.mqtt.MqttHandler;
+import com.tyzn.NettyService.mqtt.MqttMessageMaps;
 import com.tyzn.NettyService.pojo.MqttChannel;
 import com.tyzn.NettyService.service.ISendService;
 import io.netty.buffer.ByteBuf;
@@ -38,10 +39,12 @@ public class SendServiceImpl implements ISendService {
                 break;
             case AT_LEAST_ONCE:
                 //回复发布确认，响应qos1 等级的消息
-                //逻辑代码
+                handler.puback(channel,messageId);
+                //回复之后，逻辑代码，保存信息等
                 break;
             case EXACTLY_ONCE:
-                //回复发布收到，响应qos2 等级的消息
+                //回复发布收到，响应qos2 等级的消息,给出第一次回复
+                handler.pubrec(channel,messageId);
                 //逻辑代码
                 break;
         }
@@ -78,11 +81,47 @@ public class SendServiceImpl implements ISendService {
 
     /**
      * 收到消息确认，表示对方收到消息了。
-     * @param channel
+     * @param message
      */
     @Override
-    public void receivePuback(Channel channel){
+    public void receivePuback(MqttPubAckMessage message){
         //对方收到消息了，正常来说这边要保存发送未完成的消息。待对方收到消息，移除对应的消息,或者标记为已完成
+        MqttMessageMaps messageMaps = new MqttMessageMaps();
+        int messageId = message.variableHeader().messageId();
+        System.out.println(messageMaps.getMqttMessage(messageId));
+        messageMaps.removeMqttMessage(messageId);
+    }
+
+    /**
+     * 收到Pubrec消息，回复pubrel消息
+     * @param channel
+     * @param message
+     */
+    @Override
+    public void receivePubrec(Channel channel, MqttPubAckMessage message) {
+        handler.pubrel(channel,message.variableHeader().messageId());
+    }
+
+
+    /**
+     * 收到Pubrec消息，回复pubrel消息
+     * @param channel
+     * @param message
+     */
+    @Override
+    public void receivePubrel(Channel channel, MqttPubAckMessage message) {
+        handler.pubcomp(channel,message.variableHeader().messageId());
+    }
+
+    /**
+     * 收到Pubcomp消息，这是最后一个报文。代表发送的数据完全成功。
+     * @param message
+     */
+    @Override
+    public void receivePubcomp(MqttPubAckMessage message) {
+        //完全成功，删除当前存在的状态
+        MqttMessageMaps messageMaps = new MqttMessageMaps();
+        messageMaps.removeMqttMessage(message.variableHeader().messageId());
     }
 
     /**
@@ -169,16 +208,20 @@ public class SendServiceImpl implements ISendService {
                         switch (qos){
                             case AT_MOST_ONCE:
                                 //发送qos0消息
-                                handler.sendQosMsg(new ChannelMap().getChannel(mqttChannel.getDeviceId()),topic,msg.getBytes(),mqttChannel.messageId(),qos);
+                                //handler.sendQosMsg(new ChannelMap().getChannel(mqttChannel.getDeviceId()),topic,msg.getBytes(),mqttChannel.messageId(),qos);
+                                handler.sendQos0Msg(new ChannelMap().getChannel(mqttChannel.getDeviceId()),topic,msg.getBytes(),mqttChannel.messageId());
                                 break;
                             case AT_LEAST_ONCE:
                                 //发送qos1消息，收到回复之前，要存储消息并且标记未完成。
+                                handler.sendQosMsg(new ChannelMap().getChannel(mqttChannel.getDeviceId()),topic,msg.getBytes(),mqttChannel.messageId(),qos);
                                 break;
                             case EXACTLY_ONCE:
                                 //发送qos2消息，收到第一次回复之前，要存储消息并且标记未完成。
+                                handler.sendQosMsg(new ChannelMap().getChannel(mqttChannel.getDeviceId()),topic,msg.getBytes(),mqttChannel.messageId(),qos);
                                 break;
                             default:
                                 //默认发送qos0
+                                handler.sendQos0Msg(new ChannelMap().getChannel(mqttChannel.getDeviceId()),topic,msg.getBytes(),mqttChannel.messageId());
                                 break;
                         }
                     }

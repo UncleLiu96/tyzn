@@ -159,16 +159,19 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
                 case PUBACK:
                     //收到消息确认。
                     //保证能收到消息，但是可能会重复。进行对应的处理。
-                    defaultHandler.sendService.receivePuback(channel);
+                    defaultHandler.sendService.receivePuback((MqttPubAckMessage) message);
                     break;
                 case PUBREC:
-                    //暂时不做处理
+                    //收到QOS2第一次确认。继续发送第二次消息
+                    defaultHandler.sendService.receivePubrec(channel,(MqttPubAckMessage) message);
                     break;
                 case PUBREL:
-                    //暂时不做处理
+                    //收到QOS2的第二次确认，回复最终确认消息
+                    defaultHandler.sendService.receivePubrel(channel,(MqttPubAckMessage) message);
                     break;
                 case PUBCOMP:
-                    //暂时不做处理
+                    //收到Qos2的最终消息。无回复，逻辑处理
+                    defaultHandler.sendService.receivePubcomp((MqttPubAckMessage) message);
                     break;
                 default:
                     break;

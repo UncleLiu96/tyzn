@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * @author Unclue_liu
  * @organization tyzn
  * @date 2019/9/9 0009 11:23
- * @desc TODO
+ * @desc TODO 用来从spring容器里获取bean
  */
 @Component
 public class SpringContextUtils implements ApplicationContextAware {

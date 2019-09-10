@@ -6,7 +6,7 @@ import java.util.concurrent.ScheduledFuture;
  * @author Unclue_liu
  * @organization tyzn
  * @date 2019/9/9 0009 11:30
- * @desc TODO
+ * @desc TODO ScheduledFuture的包装类
  */
 public final class ScheduledTask {
 

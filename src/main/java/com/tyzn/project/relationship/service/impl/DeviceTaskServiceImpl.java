@@ -1,12 +1,11 @@
-package com.tyzn.project.task.service.impl;
+package com.tyzn.project.relationship.service.impl;
 
 import java.util.List;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.tyzn.project.task.domain.DeviceTask;
-import com.tyzn.project.task.mapper.DeviceTaskMapper;
-import com.tyzn.project.task.service.IDeviceTaskService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.tyzn.project.relationship.domain.DeviceTask;
+import com.tyzn.project.relationship.mapper.DeviceTaskMapper;
+import com.tyzn.project.relationship.service.IDeviceTaskService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,6 +1,4 @@
-package com.tyzn.project.task.controller;
-
-import java.util.List;
+package com.tyzn.project.job.controller;
 
 import com.common.annotation.Log;
 import com.common.core.controller.BaseController;
@@ -8,36 +6,34 @@ import com.common.core.domain.AjaxResult;
 import com.common.core.page.TableDataInfo;
 import com.common.enums.OperationType;
 import com.common.enums.OperationUnit;
-import com.tyzn.project.task.domain.TimedTask;
-import com.tyzn.project.task.service.ITimedTaskService;
+import com.tyzn.project.job.pojo.SysJobPO;
+import com.tyzn.project.job.service.ISysJobPOService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 定时任务Controller
  * 
  * @author Uncle_liu
- * @date 2019-09-03
+ * @date 2019-09-09
  */
 @Controller
-@RequestMapping("/system/timedTaskController")
-public class TimedTaskController extends BaseController
+@RequestMapping("/system/o")
+public class SysJobPOController extends BaseController
 {
-    private String prefix = "system/task";
+    private String prefix = "system/o";
 
     @Autowired
-    private ITimedTaskService timedTaskService;
+    private ISysJobPOService sysJobPOService;
 
     @GetMapping()
-    public String task()
+    public String o()
     {
-        return prefix + "/task";
+        return prefix + "/o";
     }
 
     /**
@@ -45,13 +41,12 @@ public class TimedTaskController extends BaseController
      */
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(TimedTask timedTask)
+    public TableDataInfo list(SysJobPO sysJobPO)
     {
         startPage();
-        List<TimedTask> list = timedTaskService.selectTimedTaskList(timedTask);
+        List<SysJobPO> list = sysJobPOService.selectSysJobPOList(sysJobPO);
         return getDataTable(list);
     }
-
 
     /**
      * 新增定时任务
@@ -68,19 +63,19 @@ public class TimedTaskController extends BaseController
     @Log(detail = "新增保存定时任务",level = 2,operationUnit = OperationUnit.UNKNOWN,operationType = OperationType.INSERT)
     @PostMapping("/add")
     @ResponseBody
-    public AjaxResult addSave(TimedTask timedTask)
+    public AjaxResult addSave(SysJobPO sysJobPO)
     {
-        return toAjax(timedTaskService.insertTimedTask(timedTask));
+        return toAjax(sysJobPOService.insertSysJobPO(sysJobPO));
     }
 
     /**
      * 修改定时任务
      */
-    @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") Long id, ModelMap mmap)
+    @GetMapping("/edit/{jobid}")
+    public String edit(@PathVariable("jobid") Long jobid, ModelMap mmap)
     {
-        TimedTask timedTask = timedTaskService.selectTimedTaskById(id);
-        mmap.put("timedTask", timedTask);
+        SysJobPO sysJobPO = sysJobPOService.selectSysJobPOById(jobid);
+        mmap.put("sysJobPO", sysJobPO);
         return prefix + "/edit";
     }
 
@@ -90,9 +85,9 @@ public class TimedTaskController extends BaseController
     @Log(detail = "修改保存定时任务",level = 3,operationUnit = OperationUnit.UNKNOWN,operationType = OperationType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
-    public AjaxResult editSave(TimedTask timedTask)
+    public AjaxResult editSave(SysJobPO sysJobPO)
     {
-        return toAjax(timedTaskService.updateTimedTask(timedTask));
+        return toAjax(sysJobPOService.updateSysJobPO(sysJobPO));
     }
 
     /**
@@ -101,8 +96,8 @@ public class TimedTaskController extends BaseController
     @Log(detail = "删除定时任务",level = 4,operationUnit = OperationUnit.UNKNOWN,operationType = OperationType.DELETE)
     @PostMapping( "/remove")
     @ResponseBody
-    public AjaxResult remove(List<Integer> ids)
+    public AjaxResult remove(String ids)
     {
-        return toAjax(timedTaskService.deleteTimedTaskByIds(ids));
+        return toAjax(sysJobPOService.deleteSysJobPOByIds(ids));
     }
 }

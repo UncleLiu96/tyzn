@@ -1,4 +1,4 @@
-package com.tyzn.project.task.domain;
+package com.tyzn.project.relationship.domain;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -17,7 +17,7 @@ public class DeviceTask
     private Long rId;
 
     /** 定时任务id */
-    private Long tId;
+    private Long jobid;
 
     public void setRId(Long rId) 
     {
@@ -28,21 +28,21 @@ public class DeviceTask
     {
         return rId;
     }
-    public void setTId(Long tId) 
-    {
-        this.tId = tId;
+
+    public Long getJobid() {
+        return jobid;
     }
 
-    public Long getTId() 
-    {
-        return tId;
+    public void setJobid(Long jobid) {
+        this.jobid = jobid;
     }
+
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("rId", getRId())
-            .append("tId", getTId())
+            .append("jobid", getJobid())
             .toString();
     }
 }

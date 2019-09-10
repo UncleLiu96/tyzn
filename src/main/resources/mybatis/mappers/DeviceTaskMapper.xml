@@ -2,22 +2,22 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.tyzn.project.task.mapper.DeviceTaskMapper">
+<mapper namespace="com.tyzn.project.relationship.mapper.DeviceTaskMapper">
     
     <resultMap type="DeviceTask" id="DeviceTaskResult">
         <result property="rId"    column="r_id"    />
-        <result property="tId"    column="t_id"    />
+        <result property="jobid"    column="jobId"    />
     </resultMap>
 
     <sql id="selectDeviceTaskVo">
-        select r_id, t_id from device_task
+        select r_id, jobId from device_task
     </sql>
 
     <select id="selectDeviceTaskList" parameterType="DeviceTask" resultMap="DeviceTaskResult">
         <include refid="selectDeviceTaskVo"/>
         <where>
             <if test="rId != null "> and r_id = #{rId}</if>
-            <if test="tId != null "> and t_id = #{tId}</if>
+            <if test="jobId != null "> and jobId = #{jobId}</if>
         </where>
     </select>
 
@@ -30,18 +30,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into device_task
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="rId != null ">r_id,</if>
-            <if test="tId != null ">t_id,</if>
+            <if test="jobId != null ">jobId,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="rId != null ">#{rId},</if>
-            <if test="tId != null ">#{tId},</if>
+            <if test="jobId != null ">#{jobId},</if>
          </trim>
     </insert>
 
     <update id="updateDeviceTask" parameterType="DeviceTask">
         update device_task
         <trim prefix="SET" suffixOverrides=",">
-            <if test="tId != null ">t_id = #{tId},</if>
+            <if test="jobId != null ">jobId = #{jobId},</if>
         </trim>
         where r_id = #{rId}
     </update>

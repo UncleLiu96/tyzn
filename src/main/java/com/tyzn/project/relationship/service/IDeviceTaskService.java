@@ -1,6 +1,6 @@
-package com.tyzn.project.task.service;
+package com.tyzn.project.relationship.service;
 
-import com.tyzn.project.task.domain.DeviceTask;
+import com.tyzn.project.relationship.domain.DeviceTask;
 
 import java.util.List;
 

@@ -1,6 +1,7 @@
 package com.tyzn.aspectj;
 
 import com.alibaba.fastjson.JSONObject;
+import com.common.Utils.DateUtils;
 import com.common.Utils.IpUtils;
 import com.common.annotation.Log;
 import com.tyzn.project.log.domain.SystemLog;
@@ -72,7 +73,7 @@ public class LogAspect {
         operationLog.setReturnValue(JSONObject.toJSONString(res));
         operationLog.setId(UUID.randomUUID().toString());
         operationLog.setArgs(JSONObject.toJSONString(joinPoint.getArgs()));
-        operationLog.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        operationLog.setCreateTime(DateUtils.getTime());
         operationLog.setMethod(signature.getDeclaringTypeName() + "." + signature.getName());
 //        operationLog.setUserId(systemUser.getId()+"");
         operationLog.setUserId("123");
@@ -86,7 +87,7 @@ public class LogAspect {
             operationLog.setOperationUnit(annotation.operationUnit().getValue());
         }
         //TODO 这里保存日志
-        System.out.println("记录日志:" + operationLog.toString());
+//        System.out.println("记录日志:" + operationLog.toString());
         int i = logService.insertSystemLog(operationLog);
         System.out.println(i);
     }

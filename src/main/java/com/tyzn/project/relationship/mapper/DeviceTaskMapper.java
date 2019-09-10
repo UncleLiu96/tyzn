@@ -1,7 +1,7 @@
-package com.tyzn.project.task.mapper;
+package com.tyzn.project.relationship.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.tyzn.project.task.domain.DeviceTask;
+import com.tyzn.project.relationship.domain.DeviceTask;
 import org.apache.ibatis.annotations.Mapper;
 
 

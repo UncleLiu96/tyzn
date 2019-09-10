@@ -1,4 +1,4 @@
-package com.tyzn.project.task.controller;
+package com.tyzn.project.relationship.controller;
 
 import java.util.List;
 
@@ -8,8 +8,8 @@ import com.common.core.domain.AjaxResult;
 import com.common.core.page.TableDataInfo;
 import com.common.enums.OperationType;
 import com.common.enums.OperationUnit;
-import com.tyzn.project.task.domain.DeviceTask;
-import com.tyzn.project.task.service.IDeviceTaskService;
+import com.tyzn.project.relationship.domain.DeviceTask;
+import com.tyzn.project.relationship.service.IDeviceTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;

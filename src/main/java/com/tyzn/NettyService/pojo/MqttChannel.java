@@ -31,7 +31,7 @@ public class MqttChannel {
             int current = index.get();
             int next = (current >= Short.MAX_VALUE ? 0: current + 1);
             if (index.compareAndSet(current, next)) {
-                return current;
+                return next;
             }
         }
     }

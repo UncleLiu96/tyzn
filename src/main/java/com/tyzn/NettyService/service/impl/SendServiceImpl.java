@@ -84,12 +84,11 @@ public class SendServiceImpl implements ISendService {
      * @param message
      */
     @Override
-    public void receivePuback(MqttPubAckMessage message){
+    public void receivePuback(MqttMessage message){
         //对方收到消息了，正常来说这边要保存发送未完成的消息。待对方收到消息，移除对应的消息,或者标记为已完成
-        MqttMessageMaps messageMaps = new MqttMessageMaps();
-        int messageId = message.variableHeader().messageId();
-        System.out.println(messageMaps.getMqttMessage(messageId));
-        messageMaps.removeMqttMessage(messageId);
+        MqttMessageIdVariableHeader variableHeader = (MqttMessageIdVariableHeader)message.variableHeader();
+        int messageId = variableHeader.messageId();
+        MqttMessageMaps.removeMqttMessage(messageId);
     }
 
     /**
@@ -98,8 +97,10 @@ public class SendServiceImpl implements ISendService {
      * @param message
      */
     @Override
-    public void receivePubrec(Channel channel, MqttPubAckMessage message) {
-        handler.pubrel(channel,message.variableHeader().messageId());
+    public void receivePubrec(Channel channel, MqttMessage message) {
+        MqttMessageIdVariableHeader variableHeader = (MqttMessageIdVariableHeader)message.variableHeader();
+        int messageId = variableHeader.messageId();
+        handler.pubrel(channel,messageId);
     }
 
 
@@ -109,8 +110,10 @@ public class SendServiceImpl implements ISendService {
      * @param message
      */
     @Override
-    public void receivePubrel(Channel channel, MqttPubAckMessage message) {
-        handler.pubcomp(channel,message.variableHeader().messageId());
+    public void receivePubrel(Channel channel, MqttMessage message) {
+        MqttMessageIdVariableHeader variableHeader = (MqttMessageIdVariableHeader)message.variableHeader();
+        int messageId = variableHeader.messageId();
+        handler.pubcomp(channel,messageId);
     }
 
     /**
@@ -118,10 +121,11 @@ public class SendServiceImpl implements ISendService {
      * @param message
      */
     @Override
-    public void receivePubcomp(MqttPubAckMessage message) {
+    public void receivePubcomp(MqttMessage message) {
         //完全成功，删除当前存在的状态
-        MqttMessageMaps messageMaps = new MqttMessageMaps();
-        messageMaps.removeMqttMessage(message.variableHeader().messageId());
+        MqttMessageIdVariableHeader variableHeader = (MqttMessageIdVariableHeader)message.variableHeader();
+        int messageId = variableHeader.messageId();
+        MqttMessageMaps.removeMqttMessage(messageId);
     }
 
     /**
@@ -140,7 +144,6 @@ public class SendServiceImpl implements ISendService {
             Set<String> mqttTopic = mqttChannel.getTopic()==null ? new HashSet<>() : mqttChannel.getTopic();
             for (String item : topics) {
                 mqttTopic.add(item);
-                System.out.println("主题"+item);
             }
             mqttChannel.setTopic(mqttTopic);
         }
@@ -189,7 +192,7 @@ public class SendServiceImpl implements ISendService {
     public void send2ClientQos0(Channel channel,String clientId,String msg){
         MqttChannel mqttChannel = new MqttChannelMaps().getMqttChannel(clientId);
         if(mqttChannel.getSessionStatus().equals(SessionStatus.ONLINE)){
-            handler.sendQos0Msg(channel,"",msg.getBytes(),mqttChannel.messageId());
+            handler.sendQos0Msg(channel,"lamppost09",msg.getBytes(),mqttChannel.messageId());
         }
     }
 

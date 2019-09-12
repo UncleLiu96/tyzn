@@ -3,6 +3,7 @@ package com.tyzn.NettyService.mqtt;
 import com.tyzn.NettyService.enums.SessionStatus;
 import com.tyzn.NettyService.pojo.MqttChannel;
 import com.tyzn.NettyService.service.ILoginService;
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -45,9 +46,7 @@ public class MqttHandler {
                 .sessionStatus(SessionStatus.ONLINE)
                 .build();
         new MqttChannelMaps().addMqttChannel(clientId,mqttChannel);
-
-        ChannelMap map = new ChannelMap();
-        map.addChannel(clientId,channel);
+        ChannelMap.addChannel(clientId,channel);
 
         AttributeKey<String> _clientId = AttributeKey.valueOf("clientId");
         AttributeKey<Boolean> _login = AttributeKey.valueOf("login");
@@ -78,7 +77,7 @@ public class MqttHandler {
      */
     public void sendQos0Msg(Channel channel, String topic, byte[] byteBuf,int messageId){
         MqttFixedHeader mqttFixedHeader = new MqttFixedHeader(MqttMessageType.PUBLISH,false, MqttQoS.AT_MOST_ONCE,false,0);
-        MqttPublishVariableHeader mqttPublishVariableHeader = new MqttPublishVariableHeader(topic,messageId );
+        MqttPublishVariableHeader mqttPublishVariableHeader = new MqttPublishVariableHeader(topic,messageId);
         MqttPublishMessage mqttPublishMessage = new MqttPublishMessage(mqttFixedHeader,mqttPublishVariableHeader, Unpooled.wrappedBuffer(byteBuf));
         channel.writeAndFlush(mqttPublishMessage);
     }
@@ -133,14 +132,17 @@ public class MqttHandler {
      * @param qos
      */
     public void sendQosMsg(Channel channel,String topic,byte[] byteBuf,int messageId,MqttQoS qos){
+        //ByteBuf buf1 = Unpooled.wrappedBuffer(byteBuf);
+        //ByteBuf buf = Unpooled.copiedBuffer(byteBuf); //线程不安全，不知道官方有没有修复
+
         MqttFixedHeader mqttFixedHeader = new MqttFixedHeader(MqttMessageType.PUBLISH,false, qos,false,0);
-        MqttPublishVariableHeader mqttPublishVariableHeader = new MqttPublishVariableHeader(topic,messageId );
+        MqttPublishVariableHeader mqttPublishVariableHeader = new MqttPublishVariableHeader(topic,messageId);
         MqttPublishMessage mqttPublishMessage = new MqttPublishMessage(mqttFixedHeader,mqttPublishVariableHeader, Unpooled.wrappedBuffer(byteBuf));
+        //channel.writeAndFlush(mqttPublishMessage);
         ChannelFuture future = channel.writeAndFlush(mqttPublishMessage);
         if(future.isSuccess()){
             //保存下来，收到回复之前不删除，一定时间内没收到消息，则重发
-            MqttMessageMaps messageMaps = new MqttMessageMaps();
-            messageMaps.setMqttMessages(messageId,mqttPublishMessage);
+            MqttMessageMaps.setMqttMessages(messageId,mqttPublishMessage);
         }
     }
 
@@ -163,14 +165,17 @@ public class MqttHandler {
      * @param messageId
      */
     public void pubrec(Channel channel,int messageId){
+        if(MqttMessageMaps.isHaveMessage(messageId)){
+            //已经存在这个消息了，重复接收不做处理
+            return;
+        }
         MqttFixedHeader fixedHeader = new MqttFixedHeader(MqttMessageType.PUBREC, false, MqttQoS.AT_LEAST_ONCE, false, 0x02);
         MqttMessageIdVariableHeader variableHeader = MqttMessageIdVariableHeader.from(messageId);
         MqttPubAckMessage message = new MqttPubAckMessage(fixedHeader, variableHeader);
         ChannelFuture future = channel.writeAndFlush(message);
         if(future.isSuccess()){
             //保存下来，收到下一步回复之前不删除，一定时间内没收到消息，则重发
-            MqttMessageMaps messageMaps = new MqttMessageMaps();
-            messageMaps.setMqttMessages(messageId,message);
+            MqttMessageMaps.setMqttMessages(messageId,message);
         }
     }
 
@@ -186,8 +191,7 @@ public class MqttHandler {
         ChannelFuture future = channel.writeAndFlush(message);
         if(future.isSuccess()){
             //修改上一步状态，收到下一步回复之前不删除，一定时间内没收到消息，则重发
-            MqttMessageMaps messageMaps = new MqttMessageMaps();
-            messageMaps.setMqttMessages(messageId,message);
+            MqttMessageMaps.setMqttMessages(messageId,message);
         }
     }
 
@@ -203,8 +207,7 @@ public class MqttHandler {
         ChannelFuture future = channel.writeAndFlush(message);
         if(future.isSuccess()){
             //当最后一个消息发送成功之后，删除当前消息状态
-            MqttMessageMaps messageMaps = new MqttMessageMaps();
-            messageMaps.removeMqttMessage(messageId);
+            MqttMessageMaps.removeMqttMessage(messageId);
         }
     }
 

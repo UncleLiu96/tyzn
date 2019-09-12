@@ -1,6 +1,5 @@
 package com.tyzn.NettyService.mqtt;
 
-import com.tyzn.NettyService.pojo.MqttChannel;
 import io.netty.handler.codec.mqtt.MqttMessage;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,4 +17,11 @@ public class MqttMessageMaps {
     }
 
     public static void setMqttMessages(Integer id,MqttMessage message){mqttMessages.put(id,message);}
+
+    public static  boolean isHaveMessage(Integer id){
+        if(getMqttMessage(id) == null){
+            return false;
+        }
+        return true;
+    }
 }

@@ -10,7 +10,7 @@ public interface ISendService {
 
     void closeConnect(String clientId);
 
-    void receivePuback(MqttPubAckMessage message);
+    void receivePuback(MqttMessage message);
 
     void receiveSubscribe(Channel channel, MqttSubscribeMessage message,String clientId);
 
@@ -22,10 +22,10 @@ public interface ISendService {
 
     void pushTopic(String topic, String msg, MqttQoS qos);
 
-    void receivePubrec(Channel channel,MqttPubAckMessage message);
+    void receivePubrec(Channel channel,MqttMessage message);
 
-    void receivePubrel(Channel channel,MqttPubAckMessage message);
+    void receivePubrel(Channel channel,MqttMessage message);
 
-    void receivePubcomp(MqttPubAckMessage message);
+    void receivePubcomp(MqttMessage message);
 }
 

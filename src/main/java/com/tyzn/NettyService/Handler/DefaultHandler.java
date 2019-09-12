@@ -142,7 +142,7 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
                     //订阅主题，回复订阅确认
                     defaultHandler.sendService.receiveSubscribe(channel,(MqttSubscribeMessage) message,clientId);
                     //defaultHandler.sendService.send2ClientQos0(channel,clientId,"发送给灯杆一组");
-                    defaultHandler.sendService.pushTopic("lamppost09","发送主题消息测试",MqttQoS.AT_MOST_ONCE);
+                    //defaultHandler.sendService.pushTopic("lamppost09","发送主题消息测试",MqttQoS.AT_LEAST_ONCE);
                     break;
                 case PINGREQ:
                     //心跳，回复心跳响应
@@ -159,19 +159,19 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
                 case PUBACK:
                     //收到消息确认。
                     //保证能收到消息，但是可能会重复。进行对应的处理。
-                    defaultHandler.sendService.receivePuback((MqttPubAckMessage) message);
+                    defaultHandler.sendService.receivePuback(message);
                     break;
                 case PUBREC:
                     //收到QOS2第一次确认。继续发送第二次消息
-                    defaultHandler.sendService.receivePubrec(channel,(MqttPubAckMessage) message);
+                    defaultHandler.sendService.receivePubrec(channel,message);
                     break;
                 case PUBREL:
                     //收到QOS2的第二次确认，回复最终确认消息
-                    defaultHandler.sendService.receivePubrel(channel,(MqttPubAckMessage) message);
+                    defaultHandler.sendService.receivePubrel(channel,message);
                     break;
                 case PUBCOMP:
                     //收到Qos2的最终消息。无回复，逻辑处理
-                    defaultHandler.sendService.receivePubcomp((MqttPubAckMessage) message);
+                    defaultHandler.sendService.receivePubcomp(message);
                     break;
                 default:
                     break;

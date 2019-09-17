@@ -1,5 +1,7 @@
 package com.tyzn.project.job.core;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
@@ -17,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Component
 public class CronTaskRegistrar implements DisposableBean {
+    private Logger logger = LoggerFactory.getLogger(CronTaskRegistrar.class);
 
     private final Map<String, ScheduledTask> scheduledTasks = new ConcurrentHashMap<>();
 
@@ -59,6 +62,7 @@ public class CronTaskRegistrar implements DisposableBean {
     public void removeCronTask(String jobNumber) {
         ScheduledTask scheduledTask = this.scheduledTasks.remove(jobNumber);
         if (scheduledTask != null){
+            logger.info("移除定时任务：编号-"+jobNumber);
             scheduledTask.cancel();
         }
     }

@@ -60,11 +60,11 @@ public class SchedulingRunnable implements Runnable {
                 method.invoke(target);
             }
         } catch (Exception ex) {
-            logger.error(String.format("定时任务执行异常 - bean：%s，方法：%s，参数：%s ", beanName, methodName, params), ex);
+            logger.error(String.format("定时任务执行异常 - 编号：%s, bean：%s，方法：%s，参数：%s ", jobid,beanName, methodName, params), ex);
         }
 
         long times = System.currentTimeMillis() - startTime;
-        logger.info("定时任务执行结束 - bean：{}，方法：{}，参数：{}，耗时：{} 毫秒", beanName, methodName, params, times);
+        logger.info("定时任务执行结束 - 编号：{}，bean：{}，方法：{}，参数：{}，耗时：{} 毫秒",jobid, beanName, methodName, params, times);
     }
 
     @Override

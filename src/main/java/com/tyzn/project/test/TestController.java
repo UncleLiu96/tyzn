@@ -39,7 +39,7 @@ public class TestController {
         sysJob.setBeanName("equipmentTask");
         sysJob.setStartMethodName("deviceStart");
         sysJob.setMethodParams("23123131,sb123122,asdas1323");
-        sysJob.setStartTime("11:21:30");
+        sysJob.setStartTime("11:40:30");
         sysJob.setJobStatus(1);
         int i = iSysJobPOService.insertSysJobPO(sysJob);
         if (i<=0)
@@ -56,6 +56,7 @@ public class TestController {
     @RequestMapping("/close")
     @ResponseBody
     public void close(){
-        cronTaskRegistrar.removeCronTask("37deviceStart");
+
+        cronTaskRegistrar.removeCronTask("12deviceStart");
     }
 }

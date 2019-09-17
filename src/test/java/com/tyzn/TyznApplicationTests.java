@@ -36,7 +36,6 @@ public class TyznApplicationTests {
         sysJob.setMethodParams("23123131,sb123122,asdas1323");
         sysJob.setStartTime("14:54:30");
         sysJob.setJobStatus(1);
-        sysJob.setEndTime("16:54:30");
         iSysJobPOService.deleteSysJobPOByIds("4");
 //        int i = iSysJobPOService.insertSysJobPO(sysJob);
         System.out.println("----"+sysJob.getJobid());

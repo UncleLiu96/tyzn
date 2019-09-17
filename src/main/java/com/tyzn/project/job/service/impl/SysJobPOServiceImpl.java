@@ -70,9 +70,6 @@ public class SysJobPOServiceImpl implements ISysJobPOService {
             if (i > 0 && sysJobPO.getJobStatus() == 1) {
                 SchedulingRunnable start = new SchedulingRunnable(sysJobPO.getBeanName(), sysJobPO.getStartMethodName(), sysJobPO.getMethodParams(),sysJobPO.getJobid());
                 cronTaskRegistrar.addCronTask(start, sysJobPO.getStartCron());
-
-                SchedulingRunnable end = new SchedulingRunnable(sysJobPO.getBeanName(), sysJobPO.getEndMethodName(), sysJobPO.getMethodParams(),sysJobPO.getJobid());
-                cronTaskRegistrar.addCronTask(end, sysJobPO.getEndCron());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -103,15 +100,9 @@ public class SysJobPOServiceImpl implements ISysJobPOService {
                 SchedulingRunnable start = new SchedulingRunnable(sysJobPO.getBeanName(), sysJobPO.getStartMethodName(), sysJobPO.getMethodParams(),sysJobPO.getJobid());
                 //先移除起始
                 cronTaskRegistrar.removeCronTask(start.jobNumber());
-                //结束-------
-                SchedulingRunnable end = new SchedulingRunnable(sysJobPO.getBeanName(), sysJobPO.getEndMethodName(), sysJobPO.getMethodParams(),sysJobPO.getJobid());
-                //先移除结束
-                cronTaskRegistrar.removeCronTask(end.jobNumber());
                 if(sysJobPO.getJobStatus() == 1){
                     //再添加起始
                     cronTaskRegistrar.addCronTask(start, sysJobPO.getStartCron());
-                    //再添加结束
-                    cronTaskRegistrar.addCronTask(end, sysJobPO.getEndCron());
                 }
             }
         } catch (Exception e) {
@@ -144,8 +135,6 @@ public class SysJobPOServiceImpl implements ISysJobPOService {
                 if (sysJobPO.getJobStatus() == 1) {
                     //删除起始定时任务
                     cronTaskRegistrar.removeCronTask(sysJobPO.jobStartNumber());
-                    //删除结束定时任务
-                    cronTaskRegistrar.removeCronTask(sysJobPO.jobEndNumber());
                 }
             } catch (Exception e) {
                 //手动回滚

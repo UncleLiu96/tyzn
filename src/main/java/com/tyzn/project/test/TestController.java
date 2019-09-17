@@ -6,6 +6,8 @@ import com.tyzn.project.job.core.CronTaskRegistrar;
 import com.tyzn.project.job.core.SchedulingRunnable;
 import com.tyzn.project.job.pojo.SysJobPO;
 import com.tyzn.project.job.service.ISysJobPOService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +24,7 @@ import javax.annotation.Resource;
 @Controller
 @Transactional
 public class TestController {
+    private Logger logger = LoggerFactory.getLogger(TestController.class);
 
 
     @Resource
@@ -35,22 +38,17 @@ public class TestController {
         SysJobPO sysJob = new SysJobPO();
         sysJob.setBeanName("equipmentTask");
         sysJob.setStartMethodName("deviceStart");
-        sysJob.setEndMethodName("deviceClose");
         sysJob.setMethodParams("23123131,sb123122,asdas1323");
-        sysJob.setStartTime("11:25:00");
-        sysJob.setEndTime("11:25:50");
+        sysJob.setStartTime("11:21:30");
         sysJob.setJobStatus(1);
         int i = iSysJobPOService.insertSysJobPO(sysJob);
         if (i<=0)
-            System.out.println("添加失败");
+            logger.error("添加失败");
         else {
             if (sysJob.getJobStatus()==1) {
                 SchedulingRunnable start = new SchedulingRunnable(sysJob.getBeanName(), sysJob.getStartMethodName(), sysJob.getMethodParams(),sysJob.getJobid());
                 cronTaskRegistrar.addCronTask(start,sysJob.getStartCron());
-
-                SchedulingRunnable end = new SchedulingRunnable(sysJob.getBeanName(), sysJob.getEndMethodName(), sysJob.getMethodParams(),sysJob.getJobid());
-                cronTaskRegistrar.addCronTask(end,sysJob.getEndCron());
-                System.out.println("**");
+                logger.info("定时任务添加成功");
             }
         }
     }

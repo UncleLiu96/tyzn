@@ -68,13 +68,11 @@ public class SendServiceImpl implements ISendService {
      */
     @Override
     public void closeConnect(String clientId){
-        MqttChannelMaps map = new MqttChannelMaps();
-        map.removeMqttChannel(clientId);
+        MqttChannelMaps.removeMqttChannel(clientId);
 
-        ChannelMap channelMap = new ChannelMap();
-        Channel channel = channelMap.getChannel(clientId);
+        Channel channel = ChannelMap.getChannel(clientId);
         channel.close();
-        channelMap.removeChannel(clientId);
+        ChannelMap.removeChannel(clientId);
         //保持会话功能省略，默认不保存会话直接删除
         //遗嘱功能省略，默认无遗嘱
     }

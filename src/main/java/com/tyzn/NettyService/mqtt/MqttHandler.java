@@ -3,7 +3,6 @@ package com.tyzn.NettyService.mqtt;
 import com.tyzn.NettyService.enums.SessionStatus;
 import com.tyzn.NettyService.pojo.MqttChannel;
 import com.tyzn.NettyService.service.ILoginService;
-import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -36,7 +35,7 @@ public class MqttHandler {
             return false;
         }
         if(variableHeader.hasUserName() && variableHeader.hasPassword()
-           && !iLoginService.checkClient(payload.userName(),payload.passwordInBytes().toString())){
+                && !iLoginService.checkClient(payload.userName(),payload.passwordInBytes().toString())){
             //用户名密码校验不通过
             connack(channel,MqttConnectReturnCode.CONNECTION_REFUSED_BAD_USER_NAME_OR_PASSWORD);
             return false;
@@ -45,7 +44,7 @@ public class MqttHandler {
                 deviceId(clientId)
                 .sessionStatus(SessionStatus.ONLINE)
                 .build();
-        new MqttChannelMaps().addMqttChannel(clientId,mqttChannel);
+        MqttChannelMaps.addMqttChannel(clientId,mqttChannel);
         ChannelMap.addChannel(clientId,channel);
 
         AttributeKey<String> _clientId = AttributeKey.valueOf("clientId");
@@ -138,7 +137,6 @@ public class MqttHandler {
         MqttFixedHeader mqttFixedHeader = new MqttFixedHeader(MqttMessageType.PUBLISH,false, qos,false,0);
         MqttPublishVariableHeader mqttPublishVariableHeader = new MqttPublishVariableHeader(topic,messageId);
         MqttPublishMessage mqttPublishMessage = new MqttPublishMessage(mqttFixedHeader,mqttPublishVariableHeader, Unpooled.wrappedBuffer(byteBuf));
-        //channel.writeAndFlush(mqttPublishMessage);
         ChannelFuture future = channel.writeAndFlush(mqttPublishMessage);
         if(future.isSuccess()){
             //保存下来，收到回复之前不删除，一定时间内没收到消息，则重发

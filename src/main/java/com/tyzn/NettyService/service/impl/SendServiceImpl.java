@@ -230,5 +230,4 @@ public class SendServiceImpl implements ISendService {
             }
         });
     }
-
 }

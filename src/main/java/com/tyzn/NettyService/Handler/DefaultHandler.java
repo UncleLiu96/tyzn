@@ -1,5 +1,6 @@
 package com.tyzn.NettyService.Handler;
 
+import com.tyzn.NettyService.enums.SessionStatus;
 import com.tyzn.NettyService.mqtt.MqttChannelMaps;
 import com.tyzn.NettyService.mqtt.MqttHandler;
 import com.tyzn.NettyService.pojo.MqttChannel;
@@ -99,6 +100,8 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         log.info("连接关闭，删除客户端信息");
+        //将客户端标记为离线
+        MqttChannelMaps.getMqttChannel(ctx.channel().attr(_clientId).get()).setSessionStatus(SessionStatus.OFFLINE);
     }
 
     /**
@@ -119,7 +122,6 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
         log.info("收到消息");
         log.info("【" + channelHandlerContext.channel().id() + "】" + " :" + message);
         log.info("消息："+message.decoderResult());
-        //channelHandlerContext.writeAndFlush("你好"+channelHandlerContext.channel().id());
         Channel channel = channelHandlerContext.channel();
         MqttFixedHeader fixedHeader = message.fixedHeader();
         //第一步登陆
@@ -130,13 +132,17 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
             return;
         }
 
-        MqttChannel mqttChannel = new MqttChannelMaps().getMqttChannel(channel.attr(_clientId).get());
+        MqttChannel mqttChannel = MqttChannelMaps.getMqttChannel(channel.attr(_clientId).get());
         String clientId = channel.attr(_clientId).get();
         if(mqttChannel!=null){
             switch (fixedHeader.messageType()){
                 case PUBLISH:
                     //收到消息，需要根据消息类型进行相关处理。
                     defaultHandler.sendService.receivePublish(channel,(MqttPublishMessage) message);
+                    Thread.sleep(3000);
+                    System.out.println("返回");
+                    defaultHandler.sendService.send2ClientQos0(channel,clientId,"123");
+                    //defaultHandler.sendService.pushTopic("/thetopic","123",MqttQoS.AT_MOST_ONCE);
                     break;
                 case SUBSCRIBE:
                     //订阅主题，回复订阅确认
@@ -177,7 +183,5 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
                     break;
             }
         }
-
     }
-
 }

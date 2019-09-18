@@ -190,7 +190,7 @@ public class SendServiceImpl implements ISendService {
     public void send2ClientQos0(Channel channel,String clientId,String msg){
         MqttChannel mqttChannel = MqttChannelMaps.getMqttChannel(clientId);
         if(mqttChannel.getSessionStatus().equals(SessionStatus.ONLINE)){
-            handler.sendQos0Msg(channel,"789",msg.getBytes(),mqttChannel.messageId());
+            handler.sendQos0Msg(channel,"6789",msg.getBytes(),mqttChannel.messageId());
         }
     }
 

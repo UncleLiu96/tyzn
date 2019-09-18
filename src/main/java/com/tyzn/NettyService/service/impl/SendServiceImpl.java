@@ -137,7 +137,7 @@ public class SendServiceImpl implements ISendService {
                 mqttTopicSubscription ->
                 mqttTopicSubscription.topicName()
         ).collect(Collectors.toSet());
-        MqttChannel mqttChannel = new MqttChannelMaps().getMqttChannel(clientId);
+        MqttChannel mqttChannel = MqttChannelMaps.getMqttChannel(clientId);
         if(mqttChannel!=null){
             Set<String> mqttTopic = mqttChannel.getTopic()==null ? new HashSet<>() : mqttChannel.getTopic();
             for (String item : topics) {
@@ -157,7 +157,7 @@ public class SendServiceImpl implements ISendService {
     @Override
     public void receiveUnSubscribe(Channel channel,MqttUnsubscribeMessage message,String clientId){
         List<String> topics = message.payload().topics();
-        MqttChannel mqttChannel = new MqttChannelMaps().getMqttChannel(clientId);
+        MqttChannel mqttChannel = MqttChannelMaps.getMqttChannel(clientId);
         if(mqttChannel!=null) {
             Set<String> mqttTopic = mqttChannel.getTopic();
             for (String item : topics) {
@@ -175,7 +175,7 @@ public class SendServiceImpl implements ISendService {
      */
     @Override
     public void closeChannel(Channel channel,String clientId){
-        MqttChannel mqttChannel = new MqttChannelMaps().getMqttChannel(clientId);
+        MqttChannel mqttChannel = MqttChannelMaps.getMqttChannel(clientId);
         mqttChannel.setSessionStatus(SessionStatus.OFFLINE);
         channel.close();
     }
@@ -188,9 +188,9 @@ public class SendServiceImpl implements ISendService {
      */
     @Override
     public void send2ClientQos0(Channel channel,String clientId,String msg){
-        MqttChannel mqttChannel = new MqttChannelMaps().getMqttChannel(clientId);
+        MqttChannel mqttChannel = MqttChannelMaps.getMqttChannel(clientId);
         if(mqttChannel.getSessionStatus().equals(SessionStatus.ONLINE)){
-            handler.sendQos0Msg(channel,"lamppost09",msg.getBytes(),mqttChannel.messageId());
+            handler.sendQos0Msg(channel,"789",msg.getBytes(),mqttChannel.messageId());
         }
     }
 
@@ -201,7 +201,7 @@ public class SendServiceImpl implements ISendService {
      */
     @Override
     public void pushTopic(String topic,String msg,MqttQoS qos){
-        Collection<MqttChannel> channels = new MqttChannelMaps().getMqttChannelMaps().values();
+        Collection<MqttChannel> channels = MqttChannelMaps.getMqttChannelMaps().values();
         channels.parallelStream().forEach(mqttChannel -> {
             if(mqttChannel.getSessionStatus().equals(SessionStatus.ONLINE)) {
                 mqttChannel.getTopic().forEach(topics -> {
@@ -210,19 +210,19 @@ public class SendServiceImpl implements ISendService {
                             case AT_MOST_ONCE:
                                 //发送qos0消息
                                 //handler.sendQosMsg(new ChannelMap().getChannel(mqttChannel.getDeviceId()),topic,msg.getBytes(),mqttChannel.messageId(),qos);
-                                handler.sendQos0Msg(new ChannelMap().getChannel(mqttChannel.getDeviceId()),topic,msg.getBytes(),mqttChannel.messageId());
+                                handler.sendQos0Msg(ChannelMap.getChannel(mqttChannel.getDeviceId()),topic,msg.getBytes(),mqttChannel.messageId());
                                 break;
                             case AT_LEAST_ONCE:
                                 //发送qos1消息，收到回复之前，要存储消息并且标记未完成。
-                                handler.sendQosMsg(new ChannelMap().getChannel(mqttChannel.getDeviceId()),topic,msg.getBytes(),mqttChannel.messageId(),qos);
+                                handler.sendQosMsg(ChannelMap.getChannel(mqttChannel.getDeviceId()),topic,msg.getBytes(),mqttChannel.messageId(),qos);
                                 break;
                             case EXACTLY_ONCE:
                                 //发送qos2消息，收到第一次回复之前，要存储消息并且标记未完成。
-                                handler.sendQosMsg(new ChannelMap().getChannel(mqttChannel.getDeviceId()),topic,msg.getBytes(),mqttChannel.messageId(),qos);
+                                handler.sendQosMsg(ChannelMap.getChannel(mqttChannel.getDeviceId()),topic,msg.getBytes(),mqttChannel.messageId(),qos);
                                 break;
                             default:
                                 //默认发送qos0
-                                handler.sendQos0Msg(new ChannelMap().getChannel(mqttChannel.getDeviceId()),topic,msg.getBytes(),mqttChannel.messageId());
+                                handler.sendQos0Msg(ChannelMap.getChannel(mqttChannel.getDeviceId()),topic,msg.getBytes(),mqttChannel.messageId());
                                 break;
                         }
                     }

@@ -23,20 +23,17 @@ public class SysJobPO
     /** start方法名称 */
     private String startMethodName;
 
-    /** end方法名称 */
-    private String endMethodName;
-
     /** 方法参数(设备编号) */
     private String methodParams;
 
     /** start定时任务启动时间 */
     private String startTime;
 
-    /** end定时任务时间 */
-    private String endTime;
-
     /** 状态:1启动、2关闭 */
     private Integer jobStatus;
+
+    /** 定时任务组 */
+    private String jobGroup;
 
     /** 备注 */
     private String remark;
@@ -47,77 +44,60 @@ public class SysJobPO
     /** 修改时间 */
     private String updateTime;
 
-    public void setJobid(Long jobid) 
-    {
+    public Long getJobid() {
+        return jobid;
+    }
+
+    public void setJobid(Long jobid) {
         this.jobid = jobid;
     }
 
-    public Long getJobid() 
-    {
-        return jobid;
+    public String getBeanName() {
+        return beanName;
     }
-    public void setBeanName(String beanName) 
-    {
+
+    public void setBeanName(String beanName) {
         this.beanName = beanName;
     }
 
-    public String getBeanName() 
-    {
-        return beanName;
+    public String getStartMethodName() {
+        return startMethodName;
     }
-    public void setStartMethodName(String startMethodName) 
-    {
+
+    public void setStartMethodName(String startMethodName) {
         this.startMethodName = startMethodName;
     }
 
-    public String getStartMethodName() 
-    {
-        return startMethodName;
-    }
-    public void setEndMethodName(String endMethodName) 
-    {
-        this.endMethodName = endMethodName;
+    public String getMethodParams() {
+        return methodParams;
     }
 
-    public String getEndMethodName() 
-    {
-        return endMethodName;
-    }
-    public void setMethodParams(String methodParams) 
-    {
+    public void setMethodParams(String methodParams) {
         this.methodParams = methodParams;
     }
 
-    public String getMethodParams() 
-    {
-        return methodParams;
+    public String getStartTime() {
+        return startTime;
     }
-    public void setStartTime(String startTime) 
-    {
+
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public String getStartTime() 
-    {
-        return startTime;
-    }
-    public void setEndTime(String endTime) 
-    {
-        this.endTime = endTime;
+    public Integer getJobStatus() {
+        return jobStatus;
     }
 
-    public String getEndTime() 
-    {
-        return endTime;
-    }
-    public void setJobStatus(Integer jobStatus)
-    {
+    public void setJobStatus(Integer jobStatus) {
         this.jobStatus = jobStatus;
     }
 
-    public Integer getJobStatus()
-    {
-        return jobStatus;
+    public String getJobGroup() {
+        return jobGroup;
+    }
+
+    public void setJobGroup(String jobGroup) {
+        this.jobGroup = jobGroup;
     }
 
     public String getRemark() {
@@ -150,10 +130,8 @@ public class SysJobPO
             .append("jobid", getJobid())
             .append("beanName", getBeanName())
             .append("startMethodName", getStartMethodName())
-            .append("endMethodName", getEndMethodName())
             .append("methodParams", getMethodParams())
             .append("startTime", getStartTime())
-            .append("endTime", getEndTime())
             .append("jobStatus", getJobStatus())
             .append("remark", getRemark())
             .append("createTime", getCreateTime())
@@ -169,13 +147,6 @@ public class SysJobPO
         return DateUtils.getCron(DateUtils.dateTime("yyyy-MM-dd HH:mm:ss","2000-01-10 "+getStartTime()));
     }
 
-    /**
-     * end表达式
-     * @return
-     */
-    public String getEndCron(){
-        return DateUtils.getCron(DateUtils.dateTime("yyyy-MM-dd HH:mm:ss","2000-01-10 "+getEndTime()));
-    }
 
     /**
      * Start方法编号
@@ -185,11 +156,4 @@ public class SysJobPO
         return getJobid()+getStartMethodName();
     }
 
-    /**
-     * end方法编号
-     * @return
-     */
-    public String jobEndNumber(){
-        return getJobid()+getEndMethodName();
-    }
 }

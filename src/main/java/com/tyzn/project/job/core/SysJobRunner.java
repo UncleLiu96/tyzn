@@ -36,12 +36,9 @@ public class SysJobRunner implements CommandLineRunner {
         List<SysJobPO> jobList = iSysJobPOService.selectSysJobPOList(jobPO);
         if (CollectionUtils.isNotEmpty(jobList)) {
             for (SysJobPO job : jobList) {
-                //起始
+                //添加定时任务
                 SchedulingRunnable start = new SchedulingRunnable(job.getBeanName(), job.getStartMethodName(), job.getMethodParams(),job.getJobid());
                 cronTaskRegistrar.addCronTask(start, job.getStartCron());
-                //结束
-                SchedulingRunnable end = new SchedulingRunnable(job.getBeanName(), job.getEndMethodName(), job.getMethodParams(),job.getJobid());
-                cronTaskRegistrar.addCronTask(end, job.getEndCron());
             }
 
             logger.info("定时任务已加载完毕...");

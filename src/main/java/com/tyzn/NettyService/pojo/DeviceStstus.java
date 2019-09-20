@@ -7,6 +7,9 @@ import lombok.Data;
  */
 @Data
 public class DeviceStstus {
+    // 1 为开关状态改变   2 为当前湿度状态
+    private Integer rep;
+
     //设备ID
     private String devId;
 

@@ -9,6 +9,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Spray {
+    //1控制开关 ，2获取数据
+    private Integer cmd = 1;
+
     //喷洒状态，0关闭，1开启
     private Integer status = 1;
 

@@ -1,13 +1,18 @@
 package com.tyzn.NettyService.service.impl;
 
 import com.tyzn.NettyService.Utils.ByteBufUtils;
+import com.tyzn.NettyService.Utils.JsonUtils;
 import com.tyzn.NettyService.enums.SessionStatus;
 import com.tyzn.NettyService.mqtt.ChannelMap;
 import com.tyzn.NettyService.mqtt.MqttChannelMaps;
 import com.tyzn.NettyService.mqtt.MqttHandler;
 import com.tyzn.NettyService.mqtt.MqttMessageMaps;
+import com.tyzn.NettyService.pojo.DeviceStstus;
 import com.tyzn.NettyService.pojo.MqttChannel;
+import com.tyzn.NettyService.pojo.Spray;
 import com.tyzn.NettyService.service.ISendService;
+import com.tyzn.project.recorder.domain.HumidityRecorder;
+import com.tyzn.project.recorder.service.IHumidityRecorderService;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.mqtt.*;
@@ -21,6 +26,11 @@ public class SendServiceImpl implements ISendService {
 
     @Autowired
     MqttHandler handler;
+
+    @Autowired
+    IHumidityRecorderService recorderService;
+
+
 
     /**
      * 收到publish消息。
@@ -41,6 +51,19 @@ public class SendServiceImpl implements ISendService {
                 //回复发布确认，响应qos1 等级的消息
                 handler.puback(channel,messageId);
                 //回复之后，逻辑代码，保存信息等
+                String json = ByteBufUtils.convertByteBufToString(payload);
+                DeviceStstus deviceStstus = JsonUtils.str2Object(json,DeviceStstus.class);
+                System.out.println("设备ID为："+deviceStstus.getDevId());
+                System.out.println("当前湿度为："+deviceStstus.getHum());
+                System.out.println("当前状态为："+deviceStstus.getRep());
+                if(deviceStstus.getRep()==2){//保存定时获取的湿度
+                    HumidityRecorder recorder = new HumidityRecorder();
+                    recorder.setDeviceNumber(deviceStstus.getDevId());
+                    recorder.setHumidity(deviceStstus.getHum().doubleValue());
+                    recorderService.insertHumidityRecorder(recorder);
+                }else{//开关状态被改变了。
+                    //逻辑代码
+                }
                 break;
             case EXACTLY_ONCE:
                 //回复发布收到，响应qos2 等级的消息,给出第一次回复
@@ -181,16 +204,22 @@ public class SendServiceImpl implements ISendService {
     }
 
     /**
-     * 发送qos0 的消息到指定客户端
+     * 发送qos 012 的消息到指定客户端
      * @param channel
      * @param clientId
      * @param msg
      */
     @Override
-    public void send2ClientQos0(Channel channel,String clientId,String msg){
+    public void send2Client(Channel channel,String clientId,String msg,MqttQoS qos){
         MqttChannel mqttChannel = MqttChannelMaps.getMqttChannel(clientId);
         if(mqttChannel.getSessionStatus().equals(SessionStatus.ONLINE)){
-            handler.sendQos0Msg(channel,"6789",msg.getBytes(),mqttChannel.messageId());
+            //发送QOS 0 消息
+            if(qos.equals(MqttQoS.AT_MOST_ONCE)){
+                handler.sendQos0Msg(channel,"",msg.getBytes(),mqttChannel.messageId());
+            }else{
+                //发送 1或者2 等级的消息
+                handler.sendQosMsg(channel,"",msg.getBytes(),mqttChannel.messageId(),qos);
+            }
         }
     }
 

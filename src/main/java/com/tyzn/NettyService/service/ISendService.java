@@ -18,7 +18,7 @@ public interface ISendService {
 
     void closeChannel(Channel channel,String clientId);
 
-    void send2ClientQos0(Channel channel,String clientId,String msg);
+    void send2Client(Channel channel,String clientId,String msg,MqttQoS qos);
 
     void pushTopic(String topic, String msg, MqttQoS qos);
 

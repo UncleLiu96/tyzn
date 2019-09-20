@@ -1,9 +1,11 @@
 package com.tyzn.NettyService.Handler;
 
+import com.tyzn.NettyService.Utils.JsonUtils;
 import com.tyzn.NettyService.enums.SessionStatus;
 import com.tyzn.NettyService.mqtt.MqttChannelMaps;
 import com.tyzn.NettyService.mqtt.MqttHandler;
 import com.tyzn.NettyService.pojo.MqttChannel;
+import com.tyzn.NettyService.pojo.Spray;
 import com.tyzn.NettyService.service.ISendService;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -114,6 +116,7 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
         log.info("连接成功，保存客户端信息");
     }
 
+    int i = 0;
     /**
      * 收到消息处理
      */
@@ -139,9 +142,10 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
                 case PUBLISH:
                     //收到消息，需要根据消息类型进行相关处理。
                     defaultHandler.sendService.receivePublish(channel,(MqttPublishMessage) message);
-                    Thread.sleep(3000);
-                    System.out.println("返回");
-                    defaultHandler.sendService.send2ClientQos0(channel,clientId,"123");
+                    if(i==0){
+                        defaultHandler.sendService.send2Client(channel,clientId, JsonUtils.Obj2JsonStr(new Spray()),MqttQoS.AT_LEAST_ONCE);
+                        i++;
+                    }
                     //defaultHandler.sendService.pushTopic("/thetopic","123",MqttQoS.AT_MOST_ONCE);
                     break;
                 case SUBSCRIBE:

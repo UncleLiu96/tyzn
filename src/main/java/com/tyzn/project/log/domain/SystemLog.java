@@ -1,5 +1,7 @@
 package com.tyzn.project.log.domain;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -16,6 +18,7 @@ public class SystemLog
     private static final long serialVersionUID = 1L;
 
     /** ID */
+    @TableId(type= IdType.AUTO)
     private String id;
 
     /** 日志等级 */

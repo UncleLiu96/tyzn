@@ -1,5 +1,7 @@
 package com.tyzn.project.recorder.domain;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -14,6 +16,7 @@ public class HumidityRecorder
     private static final long serialVersionUID = 1L;
 
     /** ID */
+    @TableId(type= IdType.AUTO)
     private Long id;
 
     /** 设备编号 */

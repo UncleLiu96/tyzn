@@ -61,7 +61,7 @@ public class HumidityRecorderServiceImpl implements IHumidityRecorderService
     public int insertHumidityRecorder(HumidityRecorder humidityRecorder)
     {
         humidityRecorder.setCreateTime(DateUtils.getTime());
-        return humidityRecorderMapper.insertHumidityRecorder(humidityRecorder);
+        return humidityRecorderMapper.insert(humidityRecorder);
     }
 
 

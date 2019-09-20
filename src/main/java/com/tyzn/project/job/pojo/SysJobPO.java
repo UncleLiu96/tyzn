@@ -1,5 +1,7 @@
 package com.tyzn.project.job.pojo;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.common.Utils.DateUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -15,6 +17,7 @@ public class SysJobPO
     private static final long serialVersionUID = 1L;
 
     /** 任务ID */
+    @TableId(type= IdType.AUTO)
     private Long jobid;
 
     /** bean名称 */

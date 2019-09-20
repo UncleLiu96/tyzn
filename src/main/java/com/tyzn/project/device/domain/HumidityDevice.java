@@ -1,5 +1,7 @@
 package com.tyzn.project.device.domain;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -15,6 +17,7 @@ public class HumidityDevice {
     /**
      * ID
      */
+    @TableId(type= IdType.AUTO)
     private Long id;
 
     /**

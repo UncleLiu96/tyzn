@@ -1,5 +1,7 @@
 package com.tyzn.project.device.domain;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -14,6 +16,7 @@ public class Device
     private static final long serialVersionUID = 1L;
 
     /** 设备组id */
+    @TableId(type= IdType.AUTO)
     private Long gId;
 
     /** 设备id */

@@ -1,5 +1,7 @@
 package com.tyzn.project.relationship.domain;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -14,6 +16,7 @@ public class DeviceTask
     private static final long serialVersionUID = 1L;
 
     /** 电磁阀id */
+    @TableId(type= IdType.AUTO)
     private Long rId;
 
     /** 定时任务id */

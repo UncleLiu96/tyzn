@@ -32,31 +32,33 @@ public class TestController {
     @Resource
     private CronTaskRegistrar cronTaskRegistrar;
 
-    @RequestMapping("/")
-    @ResponseBody
-    public void test(){
-        SysJobPO sysJob = new SysJobPO();
-        sysJob.setBeanName("equipmentTask");
-        sysJob.setStartMethodName("deviceStart");
-        sysJob.setMethodParams("23123131,sb123122,asdas1323");
-        sysJob.setStartTime("11:40:30");
-        sysJob.setJobStatus(1);
-        int i = iSysJobPOService.insertSysJobPO(sysJob);
-        if (i<=0)
-            logger.error("添加失败");
-        else {
-            if (sysJob.getJobStatus()==1) {
-                SchedulingRunnable start = new SchedulingRunnable(sysJob.getBeanName(), sysJob.getStartMethodName(), sysJob.getMethodParams(),sysJob.getJobid());
-                cronTaskRegistrar.addCronTask(start,sysJob.getStartCron());
-                logger.info("定时任务添加成功");
-            }
-        }
-    }
 
-    @RequestMapping("/close")
-    @ResponseBody
-    public void close(){
 
-        cronTaskRegistrar.removeCronTask("12deviceStart");
-    }
+//    @RequestMapping("/")
+//    @ResponseBody
+//    public void test(){
+//        SysJobPO sysJob = new SysJobPO();
+//        sysJob.setBeanName("equipmentTask");
+//        sysJob.setStartMethodName("deviceStart");
+//        sysJob.setMethodParams("23123131,sb123122,asdas1323");
+//        sysJob.setStartTime("11:40:30");
+//        sysJob.setJobStatus(1);
+//        int i = iSysJobPOService.insertSysJobPO(sysJob);
+//        if (i<=0)
+//            logger.error("添加失败");
+//        else {
+//            if (sysJob.getJobStatus()==1) {
+//                SchedulingRunnable start = new SchedulingRunnable(sysJob.getBeanName(), sysJob.getStartMethodName(), sysJob.getMethodParams(),sysJob.getJobid());
+//                cronTaskRegistrar.addCronTask(start,sysJob.getStartCron());
+//                logger.info("定时任务添加成功");
+//            }
+//        }
+//    }
+
+//    @RequestMapping("/close")
+//    @ResponseBody
+//    public void close(){
+//
+//        cronTaskRegistrar.removeCronTask("12deviceStart");
+//    }
 }

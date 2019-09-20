@@ -13,10 +13,10 @@ public class TableDataInfo implements Serializable
     private static final long serialVersionUID = 1L;
 
     /** 总记录数 */
-    private long total;
+    private long count;
 
     /** 列表数据 */
-    private List<?> rows;
+    private List<?> data;
 
     /** 消息状态码 */
     private int code;
@@ -39,28 +39,24 @@ public class TableDataInfo implements Serializable
      */
     public TableDataInfo(List<?> list, int total)
     {
-        this.rows = list;
-        this.total = total;
+        this.data = list;
+        this.count = total;
     }
 
-    public long getTotal()
-    {
-        return total;
+    public long getCount() {
+        return count;
     }
 
-    public void setTotal(long total)
-    {
-        this.total = total;
+    public void setCount(long count) {
+        this.count = count;
     }
 
-    public List<?> getRows()
-    {
-        return rows;
+    public List<?> getData() {
+        return data;
     }
 
-    public void setRows(List<?> rows)
-    {
-        this.rows = rows;
+    public void setData(List<?> data) {
+        this.data = data;
     }
 
     public int getCode()

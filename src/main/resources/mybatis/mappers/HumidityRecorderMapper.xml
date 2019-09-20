@@ -34,12 +34,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="deviceNumber != null  and deviceNumber != ''">device_number,</if>
             <if test="humidity != null ">humidity,</if>
             <if test="createTime != null ">create_time,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="deviceNumber != null  and deviceNumber != ''">#{deviceNumber},</if>
             <if test="humidity != null ">#{humidity},</if>
             <if test="createTime != null ">#{createTime},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateHumidityRecorder" parameterType="HumidityRecorder">

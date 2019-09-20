@@ -7,6 +7,8 @@ import com.tyzn.project.job.core.CronTaskRegistrar;
 import com.tyzn.project.job.core.SchedulingRunnable;
 import com.tyzn.project.job.pojo.SysJobPO;
 import com.tyzn.project.job.service.ISysJobPOService;
+import com.tyzn.project.recorder.domain.HumidityRecorder;
+import com.tyzn.project.recorder.service.IHumidityRecorderService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,20 +28,16 @@ public class TyznApplicationTests {
 
     @Autowired
     private ISysJobPOService iSysJobPOService;
+    @Autowired
+    private IHumidityRecorderService iHumidityRecorderService;
 
     @Test
     public void task(){
 
-        SysJobPO sysJob = new SysJobPO();
-        sysJob.setBeanName("demoTask");
-//        sysJob.setMethodName("taskWithParams");
-        sysJob.setMethodParams("23123131,sb123122,asdas1323");
-        sysJob.setStartTime("14:54:30");
-        sysJob.setJobStatus(1);
-        iSysJobPOService.deleteSysJobPOByIds("4");
-//        int i = iSysJobPOService.insertSysJobPO(sysJob);
-        System.out.println("----"+sysJob.getJobid());
-//        System.out.println(i);
+        HumidityRecorder humidityRecorder = new HumidityRecorder();
+        humidityRecorder.setHumidity(1.1);
+        humidityRecorder.setDeviceNumber("23");
+        iHumidityRecorderService.insertHumidityRecorder(humidityRecorder);
     }
 
 

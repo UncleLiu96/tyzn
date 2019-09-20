@@ -1,5 +1,6 @@
 package com.tyzn.project.device.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.common.annotation.Log;
 import com.common.core.controller.BaseController;
 import com.common.core.domain.AjaxResult;
@@ -11,11 +12,7 @@ import com.tyzn.project.device.service.IRadiotubeDeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,7 +26,7 @@ import java.util.List;
 @RequestMapping("/system/radiotubeDeviceController")
 public class RadiotubeDeviceController extends BaseController
 {
-    private String prefix = "system/device";
+    private String prefix = "radiotube/";
 
     @Autowired
     private IRadiotubeDeviceService radiotubeDeviceService;
@@ -37,16 +34,19 @@ public class RadiotubeDeviceController extends BaseController
     @GetMapping()
     public String device()
     {
-        return prefix + "/device";
+        return prefix + "list";
     }
+
 
     /**
      * 查询电磁阀设备列表
      */
-    @PostMapping("/list")
+    @RequestMapping("/list")
     @ResponseBody
-    public TableDataInfo list(RadiotubeDevice radiotubeDevice)
+    public TableDataInfo list(@RequestParam(value = "radiotubeNumber",required = false) String radiotubeNumber,  RadiotubeDevice radiotubeDevice)
     {
+        System.out.println(radiotubeDevice.toString());
+        System.out.println(radiotubeNumber);
         startPage();
         List<RadiotubeDevice> list = radiotubeDeviceService.selectRadiotubeDeviceList(radiotubeDevice);
         return getDataTable(list);

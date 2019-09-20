@@ -4,6 +4,7 @@ import com.common.Utils.IpUtils;
 import com.common.Utils.RemotingUtil;
 import com.tyzn.NettyService.pojo.InitBean;
 import com.tyzn.NettyService.Handler.InitHandler;
+import com.tyzn.project.recorder.domain.HumidityRecorder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelFutureListener;

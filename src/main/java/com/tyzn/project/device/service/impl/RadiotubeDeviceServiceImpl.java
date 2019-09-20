@@ -1,6 +1,7 @@
 package com.tyzn.project.device.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.enums.SqlLike;
 import com.common.Utils.DateUtils;
 import com.tyzn.project.device.domain.RadiotubeDevice;
 import com.tyzn.project.device.mapper.RadiotubeDeviceMapper;
@@ -45,7 +46,13 @@ public class RadiotubeDeviceServiceImpl implements IRadiotubeDeviceService
     @Override
     public List<RadiotubeDevice> selectRadiotubeDeviceList(RadiotubeDevice radiotubeDevice)
     {
-        QueryWrapper<RadiotubeDevice> queryWrapper = new QueryWrapper<>(radiotubeDevice);
+        //直接放对象，列会精确查询
+//        QueryWrapper<RadiotubeDevice> queryWrapper = new QueryWrapper<>(radiotubeDevice);
+        QueryWrapper<RadiotubeDevice> queryWrapper = new QueryWrapper<>();
+        if(radiotubeDevice.getRadiotubeNumber()!=null){
+            //模糊查询
+            queryWrapper.like("radiotube_number", radiotubeDevice.getRadiotubeNumber());
+        }
         return radiotubeDeviceMapper.selectList(queryWrapper);
     }
 

@@ -7,6 +7,7 @@ import com.common.core.domain.AjaxResult;
 import com.common.core.page.TableDataInfo;
 import com.common.enums.OperationType;
 import com.common.enums.OperationUnit;
+import com.tyzn.NettyService.service.IDeviceHandelService;
 import com.tyzn.project.device.domain.RadiotubeDevice;
 import com.tyzn.project.device.service.IRadiotubeDeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -31,6 +33,9 @@ public class RadiotubeDeviceController extends BaseController
     @Autowired
     private IRadiotubeDeviceService radiotubeDeviceService;
 
+    @Autowired
+    private IDeviceHandelService iDeviceHandelService;
+
     @GetMapping()
     public String device()
     {
@@ -43,13 +48,21 @@ public class RadiotubeDeviceController extends BaseController
      */
     @RequestMapping("/list")
     @ResponseBody
-    public TableDataInfo list(@RequestParam(value = "radiotubeNumber",required = false) String radiotubeNumber,  RadiotubeDevice radiotubeDevice)
+    public TableDataInfo list(RadiotubeDevice radiotubeDevice)
     {
-        System.out.println(radiotubeDevice.toString());
-        System.out.println(radiotubeNumber);
         startPage();
         List<RadiotubeDevice> list = radiotubeDeviceService.selectRadiotubeDeviceList(radiotubeDevice);
         return getDataTable(list);
+    }
+    /**
+     * 设备开关设置
+     */
+    @RequestMapping("/onOff")
+    @ResponseBody
+    public AjaxResult onOff(RadiotubeDevice radiotubeDevice){
+        System.out.println(radiotubeDevice.toString());
+        iDeviceHandelService.openDevice(radiotubeDevice.getRadiotubeNumber(),1);
+        return toAjax(radiotubeDeviceService.updateRadiotubeDevice(radiotubeDevice));
     }
 
 

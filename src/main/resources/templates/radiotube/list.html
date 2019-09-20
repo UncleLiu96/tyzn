@@ -46,17 +46,33 @@
 
                 </div>
                 <div class="layui-card-body ">
-                    <table class="layui-hide" id="test"></table>
+                    <table class="layui-hide" id="test" lay-filter="demo"></table>
                 </div>
             </div>
         </div>
     </div>
 </div>
 </body>
-<script type="text/html" id="switchTpl">
+<!--编辑-->
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<!--设备状态-->
+<script type="text/html" id="networkStateTpl">
+    {{#  if(d.networkState === 1){ }}
+    <p name="networkState" value="{{d.networkState}}" style="color:#00FF00">在线 </p>
+    {{#  } else { }}
+    <p name="networkState" value="{{d.networkState}}" style="color:#FD482C">离线 </p>
+    {{#  } }}
+</script>
+
+<script type="text/html" id="onOffTpl">
     <!-- 这里的 checked 的状态只是演示 -->
-    <input type="checkbox" name="sex" value="{{d.id}}" lay-skin="switch" lay-text="女|男" lay-filter="sexDemo" {{ d.id==
-           10003 ? 'checked' : '' }}>
+    <input type="checkbox" name="onOff" value="{{d.id+'&'+d.radiotubeNumber}}" lay-skin="switch" lay-text="开|关"
+           lay-filter="onOffDemo" {{ d.onOff== 1 ? 'checked' : '' }}>
+
 </script>
 <script>
     layui.use('laydate',
@@ -82,8 +98,7 @@
         //初始表格
         table.render({
             elem: '#test'
-            ,method:'post'
-            ,contentType:"json"
+            ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
             , url: '/system/radiotubeDeviceController/list'
             , page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
                 layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
@@ -98,45 +113,68 @@
                 {type: 'checkbox'},
                 {field: 'id', title: 'ID', sort: true}
                 , {field: 'radiotubeNumber', title: '设备编号'}
-                // ,{field:'sex', width:80, title: '性别',templet: '#switchTpl',  sort: true}
                 , {field: 'radiotubeName', title: '设备名称'}
                 , {field: 'dictId', title: '设备类型'}
-                , {field: 'onOff', title: '开关', sort: true}
+                // , {field: 'networkState', title: '网络状态', templet: "#networkStateTpl"}
+                , {field: 'onOff', title: '开关', sort: true, templet: "#onOffTpl"}
                 , {field: 'createTime', title: '创建时间', sort: true}
-                , {field: 'updateTime', title: '修改时间', sort: true}
+                // , {field: 'updateTime', title: '修改时间', sort: true}
+                , {fixed: 'right', title: '操作', toolbar: '#barDemo'}
             ]]
-            ,id: 'testReload'
-            ,page: true
+            , id: 'testReload'
+            , page: true
         });
         var $ = layui.$, active = {
-            reload: function(){
+            reload: function () {
                 var demoReload = $('#radiotubeNumber');
-
                 //执行重载
                 table.reload('testReload', {
-                    page: {
+                    pageN: {
                         curr: 1 //重新从第 1 页开始
                     }
-                    ,where: {
+                    , where: {
                         radiotubeNumber: demoReload.val()
                     }
                 }, 'data');
             }
         };
 
-        $('.demoTable .layui-btn').on('click', function(){
+
+        //监听工具条
+        table.on('tool(demo)', function (obj) {
+            var data = obj.data;
+            console.log(obj.event)
+            if (obj.event === 'detail') {
+                layer.msg('ID：' + data.id + ' 的查看操作');
+            } else if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    obj.del();
+                    layer.close(index);
+                });
+            } else if (obj.event === 'edit') {
+                layer.alert('编辑行：<br>' + JSON.stringify(data))
+            }
+        });
+        //监听开关操作
+        form.on('switch(onOffDemo)', function (obj) {
+            // layer.tips(this.value + ' ' + this.name + '：'+ obj.elem.checked, obj.othis);
+            var str = this.value.split('&');//切割id和编号
+            $.ajax({
+                url: "/system/radiotubeDeviceController/onOff",
+                type: "post",
+                dataType: "json",
+                data: {id: str[0], radiotubeNumber: str[1], onOff: obj.elem.checked == true ? 1 : 0},
+                success: function (result) {
+                    layer.tips(result, obj.othis)
+                }
+            })
+
+        });
+
+        $('.demoTable .layui-btn').on('click', function () {
             var type = $(this).data('type');
             active[type] ? active[type].call(this) : '';
         });
-        // //监听性别操作
-        // form.on('switch(sexDemo)', function (obj) {
-        //     layer.tips(this.value + ' ' + this.name + '：' + obj.elem.checked, obj.othis);
-        // });
-        //
-        // //监听锁定操作
-        // form.on('checkbox(lockDemo)', function (obj) {
-        //     layer.tips(this.value + ' ' + this.name + '：' + obj.elem.checked, obj.othis);
-        // });
     });
 </script>
 <script>var _hmt = _hmt || [];

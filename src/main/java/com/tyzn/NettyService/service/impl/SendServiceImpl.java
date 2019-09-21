@@ -21,6 +21,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+/**
+ * Mqtt消息处理发送服务类
+ */
 @Service
 public class SendServiceImpl implements ISendService {
 
@@ -30,10 +34,10 @@ public class SendServiceImpl implements ISendService {
     @Autowired
     IHumidityRecorderService recorderService;
 
-
-
     /**
      * 收到publish消息。
+     * @param channel
+     * @param message
      */
     @Override
     public void receivePublish(Channel channel, MqttPublishMessage message) {
@@ -48,21 +52,22 @@ public class SendServiceImpl implements ISendService {
                 System.out.println("收到QOS 0 的消息:"+ByteBufUtils.convertByteBufToString(payload));
                 break;
             case AT_LEAST_ONCE:
+                System.out.println("收到QOS 1 的消息:"+ByteBufUtils.convertByteBufToString(payload));
                 //回复发布确认，响应qos1 等级的消息
                 handler.puback(channel,messageId);
                 //回复之后，逻辑代码，保存信息等
                 String json = ByteBufUtils.convertByteBufToString(payload);
                 DeviceStstus deviceStstus = JsonUtils.str2Object(json,DeviceStstus.class);
-                System.out.println("设备ID为："+deviceStstus.getDevId());
-                System.out.println("当前湿度为："+deviceStstus.getHum());
-                System.out.println("当前状态为："+deviceStstus.getRep());
                 if(deviceStstus.getRep()==2){//保存定时获取的湿度
                     HumidityRecorder recorder = new HumidityRecorder();
                     recorder.setDeviceNumber(deviceStstus.getDevId());
                     recorder.setHumidity(deviceStstus.getHum().doubleValue());
                     recorderService.insertHumidityRecorder(recorder);
+                    //简单阀值喷洒，当获取到湿度小于40就开始喷水
+                    if(deviceStstus.getHum() <= 40)
+                        this.send2Client(channel,deviceStstus.getDevId(),JsonUtils.Obj2JsonStr(new Spray()),MqttQoS.AT_LEAST_ONCE);
                 }else{//开关状态被改变了。
-                    //逻辑代码
+                    //可以通过socket传给前端
                 }
                 break;
             case EXACTLY_ONCE:
@@ -235,6 +240,12 @@ public class SendServiceImpl implements ISendService {
             if(mqttChannel.getSessionStatus().equals(SessionStatus.ONLINE)) {
                 mqttChannel.getTopic().forEach(topics -> {
                     if (topics.equals(topic)) {
+                        if(qos.equals(MqttQoS.AT_MOST_ONCE)){//发送qos0消息
+                            handler.sendQos0Msg(ChannelMap.getChannel(mqttChannel.getDeviceId()),topic,msg.getBytes(),mqttChannel.messageId());
+                        }else{//发送qos12消息，收到回复之前，要存储消息并且标记未完成。
+                            handler.sendQosMsg(ChannelMap.getChannel(mqttChannel.getDeviceId()),topic,msg.getBytes(),mqttChannel.messageId(),qos);
+                        }
+                        /*
                         switch (qos){
                             case AT_MOST_ONCE:
                                 //发送qos0消息
@@ -253,7 +264,7 @@ public class SendServiceImpl implements ISendService {
                                 //默认发送qos0
                                 handler.sendQos0Msg(ChannelMap.getChannel(mqttChannel.getDeviceId()),topic,msg.getBytes(),mqttChannel.messageId());
                                 break;
-                        }
+                        }*/
                     }
                 });
             }

@@ -143,7 +143,9 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
                     //收到消息，需要根据消息类型进行相关处理。
                     defaultHandler.sendService.receivePublish(channel,(MqttPublishMessage) message);
                     if(i==0){
-                        defaultHandler.sendService.send2Client(channel,clientId, JsonUtils.Obj2JsonStr(new Spray()),MqttQoS.AT_LEAST_ONCE);
+                        Spray spray = new Spray();
+                        spray.setCmd(2);
+                        defaultHandler.sendService.send2Client(channel,clientId, JsonUtils.Obj2JsonStr(spray),MqttQoS.AT_LEAST_ONCE);
                         i++;
                     }
                     //defaultHandler.sendService.pushTopic("/thetopic","123",MqttQoS.AT_MOST_ONCE);

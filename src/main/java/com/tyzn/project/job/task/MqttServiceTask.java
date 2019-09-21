@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class MqttServiceTask {
 
     /**
-     * 每10秒执行一次
+     * 每10秒执行一 次
     * @Author: Uncle liu
     * @Param: [ null]
     * @return: null

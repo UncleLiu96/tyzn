@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/system/value")
 public class HumidityThresholdValueController extends BaseController
 {
-    private String prefix = "system/value";
+    private String prefix = "value";
 
     @Autowired
     private IHumidityThresholdValueService humidityThresholdValueService;
@@ -37,13 +37,13 @@ public class HumidityThresholdValueController extends BaseController
     @GetMapping()
     public String value()
     {
-        return prefix + "/value";
+        return prefix + "/list";
     }
 
     /**
      * 查询湿度阀值列表
      */
-    @PostMapping("/list")
+    @RequestMapping("/list")
     @ResponseBody
     public TableDataInfo list(HumidityThresholdValue humidityThresholdValue)
     {

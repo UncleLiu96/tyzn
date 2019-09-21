@@ -22,7 +22,7 @@ public class MqttServiceTask {
     * @return: null
     * @Date: 2019-09-21 09:53
     */
-    @Scheduled(cron="0/10 * * * * ? ")
+//    @Scheduled(cron="0/10 * * * * ? ")
     @Log(detail ="MqttServiceTask执行设备启动任务",level = 5,operationType = OperationType.UNKNOWN,operationUnit = OperationUnit.UNKNOWN)
     public void test(){
         System.out.println(123);

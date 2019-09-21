@@ -5,10 +5,11 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.annotation.Resource;
 
-
+@EnableScheduling //定时
 @SpringBootApplication(scanBasePackages = "com")
 @MapperScan("com.tyzn.project.*.mapper")
 public class TyznApplication  implements CommandLineRunner {

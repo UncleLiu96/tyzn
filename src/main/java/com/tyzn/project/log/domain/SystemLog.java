@@ -18,7 +18,6 @@ public class SystemLog
     private static final long serialVersionUID = 1L;
 
     /** ID */
-    @TableId(type= IdType.AUTO)
     private String id;
 
     /** 日志等级 */

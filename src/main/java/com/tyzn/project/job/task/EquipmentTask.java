@@ -4,6 +4,7 @@ import com.common.annotation.Log;
 import com.common.enums.OperationType;
 import com.common.enums.OperationUnit;
 import com.tyzn.project.job.service.ISysJobPOService;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -23,7 +24,7 @@ public class EquipmentTask {
      * 设备启动任务
      * @param params 设备编号拼接 id,id,id
      */
-    @Log(detail ="执行设备启动任务",level = 5,operationType = OperationType.UNKNOWN,operationUnit = OperationUnit.UNKNOWN)
+    @Log(detail ="EquipmentTask执行设备启动任务",level = 5,operationType = OperationType.UNKNOWN,operationUnit = OperationUnit.UNKNOWN)
     public void deviceStart(String params){
         //截取设备编号
         String[] split = params.split(",");
@@ -38,7 +39,7 @@ public class EquipmentTask {
      * 设备关闭任务
      * @param params 设备编号拼接 id,id,id
      */
-    @Log(detail ="执行设备关闭任务",level = 5,operationType = OperationType.UNKNOWN,operationUnit = OperationUnit.UNKNOWN)
+    @Log(detail ="EquipmentTask执行设备关闭任务",level = 5,operationType = OperationType.UNKNOWN,operationUnit = OperationUnit.UNKNOWN)
     public void deviceClose(String params){
         //截取设备编号
         String[] split = params.split(",");

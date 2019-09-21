@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @date 2019/9/18 0018 16:37
  * @desc TODO
  */
-@Controller
+//@Controller
 public class LoginController {
 
-    @GetMapping("/")
+//    @GetMapping("/")
     public String login(){
         return "login";
     }

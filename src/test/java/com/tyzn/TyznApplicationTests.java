@@ -11,6 +11,7 @@ import com.tyzn.project.job.service.ISysJobPOService;
 import com.tyzn.project.recorder.domain.HumidityRecorder;
 import com.tyzn.project.recorder.service.IHumidityRecorderService;
 import io.netty.channel.Channel;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,10 +57,8 @@ public class TyznApplicationTests {
     }
     @Test
     public void ddd(){
-        Channel channel = ChannelMap.getChannel("12345");
-        if(channel == null){
-            System.out.println(1);
-        }
+        System.out.println(StringUtils.startsWith("/tpa/asas","/tpa"));
+        //StringUtils.startsWith("/tpa","/tpa/as")
     }
 
 }

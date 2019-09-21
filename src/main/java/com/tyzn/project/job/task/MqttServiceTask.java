@@ -22,9 +22,11 @@ public class MqttServiceTask {
     * @return: null
     * @Date: 2019-09-21 09:53
     */
-    @Scheduled(cron="0/10 * * * * ? ")
+    @Scheduled(cron="0 0/1 * * * ? ")
     @Log(detail ="MqttServiceTask执行设备启动任务",level = 5,operationType = OperationType.UNKNOWN,operationUnit = OperationUnit.UNKNOWN)
     public void test(){
+        //一分钟执行一次，定时检测发送失败的消息进行重发。暂时不做定时任务。
         System.out.println(123);
+
     }
 }

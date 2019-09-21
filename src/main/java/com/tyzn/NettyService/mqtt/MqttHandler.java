@@ -133,7 +133,6 @@ public class MqttHandler {
     public void sendQosMsg(Channel channel,String topic,byte[] byteBuf,int messageId,MqttQoS qos){
         //ByteBuf buf1 = Unpooled.wrappedBuffer(byteBuf);
         //ByteBuf buf = Unpooled.copiedBuffer(byteBuf); //线程不安全，不知道官方有没有修复
-
         MqttFixedHeader mqttFixedHeader = new MqttFixedHeader(MqttMessageType.PUBLISH,false, qos,false,0);
         MqttPublishVariableHeader mqttPublishVariableHeader = new MqttPublishVariableHeader(topic,messageId);
         MqttPublishMessage mqttPublishMessage = new MqttPublishMessage(mqttFixedHeader,mqttPublishVariableHeader, Unpooled.wrappedBuffer(byteBuf));
@@ -209,7 +208,4 @@ public class MqttHandler {
             MqttMessageMaps.removeMqttMessage(messageId);
         }
     }
-
-
-
 }

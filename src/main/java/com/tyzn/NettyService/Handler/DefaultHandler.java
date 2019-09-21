@@ -145,10 +145,11 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
                     if(i==0){
                         Spray spray = new Spray();
                         spray.setCmd(2);
-                        defaultHandler.sendService.send2Client(channel,clientId, JsonUtils.Obj2JsonStr(spray),MqttQoS.AT_LEAST_ONCE);
+                        //defaultHandler.sendService.send2Client(channel,clientId, JsonUtils.Obj2JsonStr(spray),MqttQoS.AT_LEAST_ONCE);
+                        defaultHandler.sendService.pushTopic("/lamppost09/123","123",MqttQoS.AT_MOST_ONCE);
                         i++;
                     }
-                    //defaultHandler.sendService.pushTopic("/thetopic","123",MqttQoS.AT_MOST_ONCE);
+                    //defaultHandler.sendService.pushTopic("/lamppost09/123","123",MqttQoS.AT_MOST_ONCE);
                     break;
                 case SUBSCRIBE:
                     //订阅主题，回复订阅确认

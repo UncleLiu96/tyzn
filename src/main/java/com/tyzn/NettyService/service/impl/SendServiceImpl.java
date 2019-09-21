@@ -16,6 +16,7 @@ import com.tyzn.project.recorder.service.IHumidityRecorderService;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.mqtt.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -239,7 +240,8 @@ public class SendServiceImpl implements ISendService {
         channels.parallelStream().forEach(mqttChannel -> {
             if(mqttChannel.getSessionStatus().equals(SessionStatus.ONLINE)) {
                 mqttChannel.getTopic().forEach(topics -> {
-                    if (topics.equals(topic)) {
+                    //实现区分主题，startsWith根据前缀判断
+                    if(StringUtils.startsWith(topic,topics)){
                         if(qos.equals(MqttQoS.AT_MOST_ONCE)){//发送qos0消息
                             handler.sendQos0Msg(ChannelMap.getChannel(mqttChannel.getDeviceId()),topic,msg.getBytes(),mqttChannel.messageId());
                         }else{//发送qos12消息，收到回复之前，要存储消息并且标记未完成。

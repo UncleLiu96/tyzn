@@ -9,6 +9,9 @@ import lombok.Setter;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * MqttChannel 状态实体类，保存当前客户端的信息
+ */
 @Builder
 @Getter
 @Setter

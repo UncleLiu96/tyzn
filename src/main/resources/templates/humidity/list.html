@@ -24,7 +24,7 @@
                 <a href="">首页</a>
                 <a href="">智能喷淋</a>
                 <a>
-                    <cite>电磁阀列表</cite></a>
+                    <cite>湿度记录</cite></a>
             </span>
     <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
        onclick="location.reload()" title="刷新">
@@ -39,7 +39,7 @@
                     <div class="demoTable">
                         搜索ID：
                         <div class="layui-inline">
-                            <input class="layui-input" name="radiotubeNumber" id="radiotubeNumber" autocomplete="off">
+                            <input class="layui-input" name="deviceNumber" id="deviceNumber" autocomplete="off">
                         </div>
                         <button class="layui-btn" data-type="reload">搜索</button>
                     </div>
@@ -55,25 +55,9 @@
 </body>
 <!--编辑-->
 <script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
-<!--设备状态-->
-<script type="text/html" id="networkStateTpl">
-    {{#  if(d.networkState === 1){ }}
-    <p name="networkState" value="{{d.networkState}}" style="color:#00FF00">在线 </p>
-    {{#  } else { }}
-    <p name="networkState" value="{{d.networkState}}" style="color:#FD482C">离线 </p>
-    {{#  } }}
-</script>
 
-<script type="text/html" id="onOffTpl">
-    <!-- 这里的 checked 的状态只是演示 -->
-    <input type="checkbox" name="onOff" value="{{d.id+'&'+d.radiotubeNumber}}" lay-skin="switch" lay-text="开|关"
-           lay-filter="onOffDemo" {{ d.onOff== 1 ? 'checked' : '' }}>
-
-</script>
 <script>
     layui.use('laydate',
         function () {
@@ -99,7 +83,7 @@
         table.render({
             elem: '#test'
             ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
-            , url: '/system/radiotubeDeviceController/list'
+            , url: '/system/recorder/list'
             , page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
                 layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
                 //,curr: 5 //设定初始在第 5 页
@@ -112,28 +96,24 @@
             , cols: [[
                 {type: 'checkbox'},
                 {field: 'id', title: 'ID', sort: true}
-                , {field: 'radiotubeNumber', title: '设备编号'}
-                , {field: 'radiotubeName', title: '设备名称'}
-                , {field: 'dictId', title: '设备类型'}
-                // , {field: 'networkState', title: '网络状态', templet: "#networkStateTpl"}
-                , {field: 'onOff', title: '开关', sort: true, templet: "#onOffTpl"}
+                , {field: 'deviceNumber', title: '设备编号'}
+                , {field: 'humidity', title: '检查值'}
                 , {field: 'createTime', title: '创建时间', sort: true}
-                // , {field: 'updateTime', title: '修改时间', sort: true}
-                , {fixed: 'right', title: '操作',align:'center', toolbar: '#barDemo'}
+                , {fixed: 'right', title: '操作', align:'center',toolbar: '#barDemo'}
             ]]
             , id: 'testReload'
             , page: true
         });
         var $ = layui.$, active = {
             reload: function () {
-                var demoReload = $('#radiotubeNumber');
+                var demoReload = $('#deviceNumber');
                 //执行重载
                 table.reload('testReload', {
                     pageN: {
                         curr: 1 //重新从第 1 页开始
                     }
                     , where: {
-                        radiotubeNumber: demoReload.val()
+                        deviceNumber: demoReload.val()
                     }
                 }, 'data');
             }
@@ -154,21 +134,6 @@
             } else if (obj.event === 'edit') {
                 layer.alert('编辑行：<br>' + JSON.stringify(data))
             }
-        });
-        //监听开关操作
-        form.on('switch(onOffDemo)', function (obj) {
-            // layer.tips(this.value + ' ' + this.name + '：'+ obj.elem.checked, obj.othis);
-            var str = this.value.split('&');//切割id和编号
-            $.ajax({
-                url: "/system/radiotubeDeviceController/onOff",
-                type: "post",
-                dataType: "json",
-                data: {id: str[0], radiotubeNumber: str[1], onOff: obj.elem.checked == true ? 1 : 0},
-                success: function (result) {
-                    // layer.tips(result, obj.othis)
-                }
-            })
-
         });
 
         $('.demoTable .layui-btn').on('click', function () {

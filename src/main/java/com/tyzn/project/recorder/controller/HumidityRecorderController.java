@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/system/recorder")
 public class HumidityRecorderController extends BaseController
 {
-    private String prefix = "system/recorder";
+    private String prefix = "humidity";
 
     @Autowired
     private IHumidityRecorderService humidityRecorderService;
@@ -37,13 +37,13 @@ public class HumidityRecorderController extends BaseController
     @GetMapping()
     public String recorder()
     {
-        return prefix + "/recorder";
+        return prefix + "/list";
     }
 
     /**
      * 查询湿度记录列表
      */
-    @PostMapping("/list")
+    @RequestMapping("/list")
     @ResponseBody
     public TableDataInfo list(HumidityRecorder humidityRecorder)
     {

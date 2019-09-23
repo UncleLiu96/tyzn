@@ -21,6 +21,9 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 通信处理类，处理连接，断开，接收消息，心跳，异常等。
@@ -110,7 +113,9 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         log.info("连接关闭，删除客户端信息");
         String clientId = ctx.channel().attr(_clientId).get();
-        WebSocket.sendMessage("OFFLINE:"+clientId);
+        //发送连接的设备编号给前端
+        ConcurrentHashMap.KeySetView<String, MqttChannel> strings = MqttChannelMaps.getMqttChannelMaps().keySet();
+        WebSocket.sendMessage(strings);
         //将客户端标记为离线
         MqttChannelMaps.getMqttChannel(clientId).setSessionStatus(SessionStatus.OFFLINE);
     }
@@ -142,7 +147,8 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
                 channel.close();
             }
             //发送连接的设备编号给前端
-            WebSocket.sendMessage("CONNECT:"+channel.attr(_clientId).get());
+            ConcurrentHashMap.KeySetView<String, MqttChannel> strings = MqttChannelMaps.getMqttChannelMaps().keySet();
+            WebSocket.sendMessage(strings);
             return;
         }
         String clientId = channel.attr(_clientId).get();

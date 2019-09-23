@@ -179,11 +179,10 @@
     });
 </script>
 <script type="text/javascript">
-
     var ws = null;
     if('WebSocket' in window){
         // alert("你的浏览器支持 WebSocket");
-        ws = new WebSocket("ws://192.168.1.77:80/ws/123");
+        ws = new WebSocket("ws://192.168.1.77:80/ws");
     } else {
         alert('你的浏览器不支持webSocket');
     }
@@ -217,22 +216,13 @@
 
     //将消息显示在网页上
     function appendMessage(message){
-        var strings = message.split(":");
-        console.log(strings)
-        if(strings.length==2){
-            if(strings[0]=="CONNECT"){//连接
-                $("#"+strings[1]).text("在线")
-                $("#"+strings[1]).attr("style","color:#00FF00")
-            }else{//关闭
-                $("#"+strings[1]).text("离线")
-                $("#"+strings[1]).attr("style","color:#FD482C")
-            }
-
+        var strings = message.replace("[","").replace("]","").split(",");
+        for(var i=0;i<strings.length;i++){
+            var s = strings[i].trim();
+            $("#"+s).text("在线")
+            $("#"+s).attr("style","color:#00FF00")
         }
 
-        console.log(message)
-        // var context = $("#context").html() +"<br/>" +message;
-        // $("#context").html(context);
     }
     //关闭连接
     function closeWebSocket(){

@@ -2,12 +2,16 @@ package com.tyzn.project.socket;
 
 
 
+import com.tyzn.NettyService.Utils.JsonUtils;
+import com.tyzn.NettyService.pojo.MqttChannel;
 import org.springframework.stereotype.Service;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 /**
  * @author Unclue_liu
@@ -15,7 +19,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * @date 2019/9/23 0023 15:07
  * @desc TODO
  */
-@ServerEndpoint("/ws/{sid}")
+@ServerEndpoint("/ws")
 @Service
 public class WebSocket {
 
@@ -118,11 +122,20 @@ public class WebSocket {
      * @throws IOException
      */
     public static void sendMessage(String message) throws IOException {
-        if(webSocketSet.size()==0){//没有客户端连接时不执行
-            return;
-        }
+
         session.getBasicRemote().sendText(message);
     }
+    public static void sendMessage(ConcurrentHashMap.KeySetView<String, MqttChannel> strings) throws IOException {
+        for(String s:strings){
+            System.out.println(s);
+        }
+        System.out.println(JsonUtils.Obj2JsonStr(strings));
+        if(strings.size()==0){//没有客户端连接时不执行
+            return;
+        }
+        session.getBasicRemote().sendText(strings.toString());
+    }
+
 
     //返回在线数
     private static synchronized int getOnlineConunt() {

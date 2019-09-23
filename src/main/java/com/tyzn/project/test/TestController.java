@@ -6,6 +6,7 @@ import com.tyzn.project.job.core.CronTaskRegistrar;
 import com.tyzn.project.job.core.SchedulingRunnable;
 import com.tyzn.project.job.pojo.SysJobPO;
 import com.tyzn.project.job.service.ISysJobPOService;
+import com.tyzn.project.socket.WebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.websocket.Session;
+import javax.websocket.server.PathParam;
 
 /**
  * @author Unclue_liu
@@ -32,10 +35,18 @@ public class TestController {
     @Resource
     private CronTaskRegistrar cronTaskRegistrar;
 
-
-
-    @RequestMapping("/")
+    @RequestMapping("/web")
     @ResponseBody
+    public void web(String msg)throws Exception{
+        System.out.println("***************");
+        WebSocket.sendMessage(msg);
+        System.out.println("//////////////");
+    }
+
+
+
+//    @RequestMapping("/")
+//    @ResponseBody
     public void test(){
         SysJobPO sysJob = new SysJobPO();
         sysJob.setBeanName("equipmentTask");
@@ -55,10 +66,4 @@ public class TestController {
         }
     }
 
-//    @RequestMapping("/close")
-//    @ResponseBody
-//    public void close(){
-//
-//        cronTaskRegistrar.removeCronTask("12deviceStart");
-//    }
 }

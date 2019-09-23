@@ -7,6 +7,8 @@ import com.tyzn.NettyService.mqtt.MqttHandler;
 import com.tyzn.NettyService.pojo.MqttChannel;
 import com.tyzn.NettyService.pojo.Spray;
 import com.tyzn.NettyService.service.ISendService;
+import com.tyzn.project.socket.WebSocket;
+import com.tyzn.project.test.TestController;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -18,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 
 /**
  * 通信处理类，处理连接，断开，接收消息，心跳，异常等。
@@ -34,6 +37,9 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
     @Autowired
     ISendService sendService;
 
+    @Resource
+    private TestController testController;
+
     protected AttributeKey<String> _clientId = AttributeKey.valueOf("clientId");
 
     public DefaultHandler(){
@@ -48,6 +54,7 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
         defaultHandler = this;
         defaultHandler.mqttHandler = this.mqttHandler;
         defaultHandler.sendService = this.sendService;
+        defaultHandler.testController = this.testController;
     }
 
     /**
@@ -132,11 +139,14 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
             if(!defaultHandler.mqttHandler.login(channel,(MqttConnectMessage) message)){
                 channel.close();
             }
+            //发送编号给前端
+            WebSocket.sendMessage(channel.attr(_clientId).get());
             return;
         }
-
-        MqttChannel mqttChannel = MqttChannelMaps.getMqttChannel(channel.attr(_clientId).get());
         String clientId = channel.attr(_clientId).get();
+        MqttChannel mqttChannel = MqttChannelMaps.getMqttChannel(clientId);
+
+
         if(mqttChannel!=null){
             switch (fixedHeader.messageType()){
                 case PUBLISH:

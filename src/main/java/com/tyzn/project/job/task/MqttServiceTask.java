@@ -37,7 +37,7 @@ public class MqttServiceTask {
     * @return: null
     * @Date: 2019-09-21 09:53
     */
-    @Scheduled(cron="0 0/1 0/1 * * ? ")   //    0/10 * * * * ?   10秒执行一次        0 0/1 0/1 * * ?  一小时执行一次
+    @Scheduled(cron="0 0 0/1 * * ? ")   //    0/10 * * * * ?   10秒执行一次        0 0 0/1 * * ?  一小时执行一次
     @Log(detail ="MqttServiceTask执行设备启动任务",level = 5,operationType = OperationType.UNKNOWN,operationUnit = OperationUnit.UNKNOWN)
     public void timedGetData(){
         //一小时执行一次，定时检测拉取数据

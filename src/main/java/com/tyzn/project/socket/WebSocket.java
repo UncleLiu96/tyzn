@@ -118,7 +118,6 @@ public class WebSocket {
      * @throws IOException
      */
     public static void sendMessage(String message) throws IOException {
-        System.out.println(message);
         session.getBasicRemote().sendText(message);
     }
 

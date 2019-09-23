@@ -23,8 +23,7 @@ public class DeviceHandelImpl implements IDeviceHandelService {
     public void openDevice(String clientId,int minute){
         Channel channel = ChannelMap.getChannel(clientId);
         if(channel != null && minute > 0){
-            Spray spray = new Spray();
-            spray.setTime(minute);
+            Spray spray = new Spray(1,1,minute);
             sendService.send2Client(channel,clientId, JsonUtils.Obj2JsonStr(spray), MqttQoS.AT_LEAST_ONCE);
         }else {
             log.error("不存在的Channel....");

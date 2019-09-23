@@ -14,7 +14,7 @@ spring:
   # 数据连接
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://192.168.1.45:3306/tyzn?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+    url: jdbc:mysql://192.168.1.77:3306/tyzn?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
     username: tyzn
     password: tyzn
   mqtt:

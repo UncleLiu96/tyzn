@@ -118,6 +118,9 @@ public class WebSocket {
      * @throws IOException
      */
     public static void sendMessage(String message) throws IOException {
+        if(webSocketSet.size()==0){//没有客户端连接时不执行
+            return;
+        }
         session.getBasicRemote().sendText(message);
     }
 

@@ -217,8 +217,19 @@
 
     //将消息显示在网页上
     function appendMessage(message){
-        $("#"+message).text("在线")
-        $("#"+message).attr("style","color:#00FF00")
+        var strings = message.split(":");
+        console.log(strings)
+        if(strings.length==2){
+            if(strings[0]=="CONNECT"){//连接
+                $("#"+strings[1]).text("在线")
+                $("#"+strings[1]).attr("style","color:#00FF00")
+            }else{//关闭
+                $("#"+strings[1]).text("离线")
+                $("#"+strings[1]).attr("style","color:#FD482C")
+            }
+
+        }
+
         console.log(message)
         // var context = $("#context").html() +"<br/>" +message;
         // $("#context").html(context);

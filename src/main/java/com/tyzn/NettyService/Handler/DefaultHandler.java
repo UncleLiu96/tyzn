@@ -109,8 +109,10 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         log.info("连接关闭，删除客户端信息");
+        String clientId = ctx.channel().attr(_clientId).get();
+        WebSocket.sendMessage("OFFLINE:"+clientId);
         //将客户端标记为离线
-        MqttChannelMaps.getMqttChannel(ctx.channel().attr(_clientId).get()).setSessionStatus(SessionStatus.OFFLINE);
+        MqttChannelMaps.getMqttChannel(clientId).setSessionStatus(SessionStatus.OFFLINE);
     }
 
     /**
@@ -139,8 +141,8 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
             if(!defaultHandler.mqttHandler.login(channel,(MqttConnectMessage) message)){
                 channel.close();
             }
-            //发送编号给前端
-            WebSocket.sendMessage(channel.attr(_clientId).get());
+            //发送连接的设备编号给前端
+            WebSocket.sendMessage("CONNECT:"+channel.attr(_clientId).get());
             return;
         }
         String clientId = channel.attr(_clientId).get();

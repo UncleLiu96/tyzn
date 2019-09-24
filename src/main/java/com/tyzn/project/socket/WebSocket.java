@@ -129,7 +129,7 @@ public class WebSocket {
         session.getBasicRemote().sendText(message);
     }
     public static void sendMessage(ConcurrentHashMap.KeySetView<String, MqttChannel> strings) throws IOException {
-        if(strings.size()==0){//没有客户端连接时不执行
+        if(strings.size()==0 || getOnlineConunt()==0){//没有客户端连接时不执行
             return;
         }
 

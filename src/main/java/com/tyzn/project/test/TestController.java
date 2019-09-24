@@ -38,9 +38,7 @@ public class TestController {
     @RequestMapping("/web")
     @ResponseBody
     public void web(String msg)throws Exception{
-        System.out.println("***************");
         WebSocket.sendMessage(msg);
-        System.out.println("//////////////");
     }
 
 

@@ -117,7 +117,10 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
         ConcurrentHashMap.KeySetView<String, MqttChannel> strings = MqttChannelMaps.getMqttChannelMaps().keySet();
         WebSocket.sendMessage(strings);
         //将客户端标记为离线
-        MqttChannelMaps.getMqttChannel(clientId).setSessionStatus(SessionStatus.OFFLINE);
+        //MqttChannelMaps.getMqttChannel(clientId).setSessionStatus(SessionStatus.OFFLINE);
+
+        //直接删除客户端信息
+        defaultHandler.mqttHandler.quit(clientId);
     }
 
     /**

@@ -218,7 +218,7 @@ public class MqttHandler {
         MqttPubAckMessage message = new MqttPubAckMessage(fixedHeader, variableHeader);
         ChannelFuture future = channel.writeAndFlush(message);
         if(future.isSuccess()){
-            //当最后一个消息发送成功之后，删除当前消息状态
+            // 当最后一个消息发送成功之后，删除当前消息状态
             MqttMessageMaps.removeMqttMessage(messageId);
         }
     }

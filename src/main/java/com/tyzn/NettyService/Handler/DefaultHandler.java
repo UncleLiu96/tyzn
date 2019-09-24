@@ -152,7 +152,7 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
             if(!defaultHandler.mqttHandler.login(channel,(MqttConnectMessage) message)){
                 channel.close();
             }
-            //发送连接的设备编号给前端
+            // 发送连接的设备编号给前端
             ConcurrentHashMap.KeySetView<String, MqttChannel> strings = MqttChannelMaps.getMqttChannelMaps().keySet();
             WebSocket.sendMessage(strings);
             return;

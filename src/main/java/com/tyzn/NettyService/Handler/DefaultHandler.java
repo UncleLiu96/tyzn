@@ -90,13 +90,16 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
             String clientId = channel.attr(_clientId).get();
             switch (e.state()) {
                 case READER_IDLE:   //读
-                    defaultHandler.sendService.closeChannel(channel,clientId);
+                    //defaultHandler.sendService.closeChannel(channel,clientId);
+                    channel.close();
                     break;
                 case WRITER_IDLE:   //写
-                    defaultHandler.sendService.closeChannel(channel,clientId);
+                    //defaultHandler.sendService.closeChannel(channel,clientId);
+                    channel.close();
                     break;
                 case ALL_IDLE:  //读写都有
-                    defaultHandler.sendService.closeChannel(channel,clientId);
+                    //defaultHandler.sendService.closeChannel(channel,clientId);
+                    channel.close();
                     break;
                 default:
                     break;
@@ -130,7 +133,7 @@ public class DefaultHandler extends SimpleChannelInboundHandler<MqttMessage> {
      */
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        log.info("连接成功，保存客户端信息");
+        log.info("网络连接成功，等待客户端发来登录信息.....");
     }
 
     int i = 0;

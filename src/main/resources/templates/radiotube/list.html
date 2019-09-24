@@ -193,29 +193,29 @@
     }
     //建立成功建立的回调方法
     ws.onopen = function (event) {
-        // alert("消息已发送")
-        // appendMessage("open");
+        appendMessage(event.data);
     }
     //接收到消息的回调方法
     ws.onmessage = function (event) {
-        // alert("接收到服务端发的消息")
         appendMessage(event.data);
     }
     //连接关闭的回调方法
     ws.onclose = function () {
-        // alert("连接已关闭")
-        // appendMessage("close");
+        //获取所有状态
+        var networkState =$("[name='networkState']");
+        //标记离线
+        $.each(networkState,function(i,val){
+            $(this).text("离线");
+            $(this).attr("style", "color:#FD482C");
+        });
     }
     //连接发送错误的回调方法
     ws.onerror = function () {
-        // alert("连接发送错误")
-        // appendMessage("error");
     }
 
     //监听窗口关闭事件，当窗口关闭时，主动关闭webSocket连接
     //防止连接还没断开就关闭窗口，server端会抛异常
     ws.onbeforeunload = function () {
-        // alert("窗口关闭了，关闭socket连接")
         ws.onclose();
     }
 
@@ -227,10 +227,8 @@
             for (var i = 0; i < strings.length; i++) {
                 var s = strings[i].trim();
                 var id = "#" + s;
-                console.log(id)
                 $(id).text("在线");
                 $(id).attr("style", "color:#00FF00");
-                console.log("==")
             }
         }
 
@@ -249,9 +247,7 @@
     }
     //刷新
     window.onbeforeunload = function confirmExit() { // 此地可以写你的业务代码
-        console.log("刷新")
         closeWebSocket();//关闭websocket
-        // return "";
     }
 </script>
 

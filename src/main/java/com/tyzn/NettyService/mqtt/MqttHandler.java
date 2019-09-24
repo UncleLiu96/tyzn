@@ -169,7 +169,6 @@ public class MqttHandler {
         MqttMessageIdVariableHeader variableHeader = MqttMessageIdVariableHeader.from(messageId);
         MqttPubAckMessage message = new MqttPubAckMessage(fixedHeader, variableHeader);
         channel.writeAndFlush(message);
-        System.out.println("应答");
     }
 
     /**

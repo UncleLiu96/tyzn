@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="/css/xadmin.css">
     <script src="/lib/layui/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="/js/xadmin.js"></script>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
     <!--[if lt IE 9]>
     <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
     <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
@@ -99,7 +100,7 @@
         //初始表格
         table.render({
             elem: '#test'
-            ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
             , url: '/system/radiotubeDeviceController/list'
             , page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
                 layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
@@ -120,10 +121,15 @@
                 , {field: 'onOff', title: '开关', sort: true, templet: "#onOffTpl"}
                 , {field: 'createTime', title: '创建时间', sort: true}
                 // , {field: 'updateTime', title: '修改时间', sort: true}
-                , {fixed: 'right', title: '操作',align:'center', toolbar: '#barDemo'}
+                , {fixed: 'right', title: '操作', align: 'center', toolbar: '#barDemo'}
             ]]
             , id: 'testReload'
             , page: true
+            , done: function (res) { //表格加载完之后执行代码
+                var m = localStorage.getItem("msg");//获取存储是值
+                appendMessage(m);//调用状态改变
+                console.log(m)
+            }
         });
         var $ = layui.$, active = {
             reload: function () {
@@ -139,8 +145,6 @@
                 }, 'data');
             }
         };
-
-
         //监听工具条
         table.on('tool(demo)', function (obj) {
             var data = obj.data;
@@ -176,64 +180,79 @@
             var type = $(this).data('type');
             active[type] ? active[type].call(this) : '';
         });
+
     });
 </script>
 <script type="text/javascript">
     var ws = null;
-    if('WebSocket' in window){
+    if ('WebSocket' in window) {
         // alert("你的浏览器支持 WebSocket");
         ws = new WebSocket("ws://192.168.1.77:80/ws");
     } else {
         alert('你的浏览器不支持webSocket');
     }
     //建立成功建立的回调方法
-    ws.onopen = function(event){
+    ws.onopen = function (event) {
         // alert("消息已发送")
-        appendMessage("open");
+        // appendMessage("open");
     }
     //接收到消息的回调方法
-    ws.onmessage = function(event){
+    ws.onmessage = function (event) {
         // alert("接收到服务端发的消息")
         appendMessage(event.data);
     }
     //连接关闭的回调方法
-    ws.onclose = function(){
+    ws.onclose = function () {
         // alert("连接已关闭")
-        appendMessage("close");
+        // appendMessage("close");
     }
     //连接发送错误的回调方法
-    ws.onerror = function(){
+    ws.onerror = function () {
         // alert("连接发送错误")
-        appendMessage("error");
+        // appendMessage("error");
     }
 
     //监听窗口关闭事件，当窗口关闭时，主动关闭webSocket连接
     //防止连接还没断开就关闭窗口，server端会抛异常
-    ws.onbeforeunload = function(){
+    ws.onbeforeunload = function () {
         // alert("窗口关闭了，关闭socket连接")
         ws.onclose();
     }
 
     //将消息显示在网页上
-    function appendMessage(message){
-        var strings = message.replace("[","").replace("]","").split(",");
-        for(var i=0;i<strings.length;i++){
-            var s = strings[i].trim();
-            $("#"+s).text("在线")
-            $("#"+s).attr("style","color:#00FF00")
+    function appendMessage(message) {
+        localStorage.msg = message;//存储本地，用于刷新赋值
+        if (message.indexOf("[") != -1) {//判断是否存在编号
+            var strings = message.replace("[", "").replace("]", "").split(",");
+            for (var i = 0; i < strings.length; i++) {
+                var s = strings[i].trim();
+                var id = "#" + s;
+                console.log(id)
+                $(id).text("在线");
+                $(id).attr("style", "color:#00FF00");
+                console.log("==")
+            }
         }
 
+
     }
+
     //关闭连接
-    function closeWebSocket(){
+    function closeWebSocket() {
         ws.close();
     }
+
     //发送消息
-    function sendMessage(){
+    function sendMessage() {
         var message = $("#message").val();
         ws.send(message);
     }
-
+    //刷新
+    window.onbeforeunload = function confirmExit() { // 此地可以写你的业务代码
+        console.log("刷新")
+        closeWebSocket();//关闭websocket
+        // return "";
+    }
 </script>
 
 </html>

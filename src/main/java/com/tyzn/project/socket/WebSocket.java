@@ -2,6 +2,9 @@ package com.tyzn.project.socket;
 
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.tyzn.NettyService.Utils.JsonUtils;
 import com.tyzn.NettyService.pojo.MqttChannel;
 import org.springframework.stereotype.Service;
@@ -63,11 +66,11 @@ public class WebSocket {
         //在线数加1
         addOnlineCount();
         System.out.println("有新连接加入！"+sid+"当前在线人数为："+getOnlineConunt());
-        try {
-            sendMessage("有新的连接加入了！！");
-        } catch (IOException e) {
-            System.out.println("IO异常");
-        }
+//        try {
+//            sendMessage("有新的连接加入了！！");
+//        } catch (IOException e) {
+//            System.out.println("IO异常");
+//        }
 
     }
     //连接关闭调用的方法
@@ -126,13 +129,10 @@ public class WebSocket {
         session.getBasicRemote().sendText(message);
     }
     public static void sendMessage(ConcurrentHashMap.KeySetView<String, MqttChannel> strings) throws IOException {
-        for(String s:strings){
-            System.out.println(s);
-        }
-        System.out.println(JsonUtils.Obj2JsonStr(strings));
         if(strings.size()==0){//没有客户端连接时不执行
             return;
         }
+
         session.getBasicRemote().sendText(strings.toString());
     }
 

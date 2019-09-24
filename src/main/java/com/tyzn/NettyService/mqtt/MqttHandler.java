@@ -25,6 +25,12 @@ public class MqttHandler {
     @Autowired
     ILoginService iLoginService;
 
+    /**
+     * 用户登录，成功后将信息保存
+     * @param channel
+     * @param message
+     * @return
+     */
     public boolean login(Channel channel, MqttConnectMessage message){
         MqttConnectPayload payload = message.payload();
         String clientId = payload.clientIdentifier();
@@ -53,6 +59,15 @@ public class MqttHandler {
         channel.attr(_clientId).set(clientId);
         connack(channel,MqttConnectReturnCode.CONNECTION_ACCEPTED);
         return true;
+    }
+
+    /**
+     * 删除当前已关闭的channel信息
+     * @param clientId
+     */
+    public void quit(String clientId){
+        MqttChannelMaps.removeMqttChannel(clientId);
+        ChannelMap.removeChannel(clientId);
     }
 
     /**

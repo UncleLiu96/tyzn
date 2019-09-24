@@ -128,6 +128,12 @@ public class WebSocket {
 
         session.getBasicRemote().sendText(message);
     }
+
+    /**
+     * 发送消息
+     * @param strings 在线设备编号集合
+     * @throws IOException
+     */
     public static void sendMessage(ConcurrentHashMap.KeySetView<String, MqttChannel> strings) throws IOException {
         if(strings.size()==0 || getOnlineConunt()==0){//没有客户端连接时不执行
             return;

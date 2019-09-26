@@ -60,7 +60,6 @@ public class RadiotubeDeviceController extends BaseController
     @RequestMapping("/onOff")
     @ResponseBody
     public AjaxResult onOff(RadiotubeDevice radiotubeDevice){
-        System.out.println(radiotubeDevice.toString());
         iDeviceHandelService.openDevice(radiotubeDevice.getRadiotubeNumber(),1);
         return toAjax(radiotubeDeviceService.updateRadiotubeDevice(radiotubeDevice));
     }
@@ -107,6 +106,9 @@ public class RadiotubeDeviceController extends BaseController
     {
         return toAjax(radiotubeDeviceService.updateRadiotubeDevice(radiotubeDevice));
     }
+
+
+
 
     /**
      * 删除电磁阀设备

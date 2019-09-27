@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spray.project.recorder.mapper.HumidityRecorderMapper">
+    
+    <resultMap type="HumidityRecorder" id="HumidityRecorderResult">
+        <result property="id"    column="id"    />
+        <result property="deviceNumber"    column="device_number"    />
+        <result property="humidity"    column="humidity"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectHumidityRecorderVo">
+        select id, device_number, humidity, create_time from humidity_recorder
+    </sql>
+
+    <select id="selectHumidityRecorderList" parameterType="HumidityRecorder" resultMap="HumidityRecorderResult">
+        <include refid="selectHumidityRecorderVo"/>
+        <where>
+            <if test="deviceNumber != null  and deviceNumber != ''"> and device_number = #{deviceNumber}</if>
+            <if test="humidity != null "> and humidity = #{humidity}</if>
+        </where>
+    </select>
+
+    <select id="selectHumidityRecorderById" parameterType="Long" resultMap="HumidityRecorderResult">
+        <include refid="selectHumidityRecorderVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertHumidityRecorder" parameterType="HumidityRecorder" useGeneratedKeys="true" keyProperty="id">
+        insert into humidity_recorder
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deviceNumber != null  and deviceNumber != ''">device_number,</if>
+            <if test="humidity != null ">humidity,</if>
+            <if test="createTime != null ">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deviceNumber != null  and deviceNumber != ''">#{deviceNumber},</if>
+            <if test="humidity != null ">#{humidity},</if>
+            <if test="createTime != null ">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateHumidityRecorder" parameterType="HumidityRecorder">
+        update humidity_recorder
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceNumber != null  and deviceNumber != ''">device_number = #{deviceNumber},</if>
+            <if test="humidity != null ">humidity = #{humidity},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHumidityRecorderById" parameterType="Long">
+        delete from humidity_recorder where id = #{id}
+    </delete>
+
+    <delete id="deleteHumidityRecorderByIds" parameterType="String">
+        delete from humidity_recorder where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

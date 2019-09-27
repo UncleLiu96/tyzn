@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spray.project.device.mapper.HumidityDeviceMapper">
+
+    <resultMap type="HumidityDevice" id="HumidityDeviceResult">
+        <result property="id"    column="id"    />
+        <result property="humidityNumber"    column="humidity_number"    />
+        <result property="humidityName"    column="humidity_name"    />
+        <result property="dictId"    column="dict_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectHumidityDeviceVo">
+        select id, humidity_number, humidity_name, dict_id, create_time, update_time from humidity_device
+    </sql>
+
+    <select id="selectHumidityDeviceList" parameterType="HumidityDevice" resultMap="HumidityDeviceResult">
+        <include refid="selectHumidityDeviceVo"/>
+        <where>
+            <if test="humidityNumber != null  and humidityNumber != ''"> and humidity_number = #{humidityNumber}</if>
+            <if test="humidityName != null  and humidityName != ''"> and humidity_name like concat('%', #{humidityName}, '%')</if>
+            <if test="dictId != null "> and dict_id = #{dictId}</if>
+        </where>
+    </select>
+
+    <select id="selectHumidityDeviceById" parameterType="Long" resultMap="HumidityDeviceResult">
+        <include refid="selectHumidityDeviceVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertHumidityDevice" parameterType="HumidityDevice" useGeneratedKeys="true" keyProperty="id">
+        insert into humidity_device
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="humidityNumber != null  and humidityNumber != ''">humidity_number,</if>
+            <if test="humidityName != null  and humidityName != ''">humidity_name,</if>
+            <if test="dictId != null ">dict_id,</if>
+            <if test="createTime != null ">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="humidityNumber != null  and humidityNumber != ''">#{humidityNumber},</if>
+            <if test="humidityName != null  and humidityName != ''">#{humidityName},</if>
+            <if test="dictId != null ">#{dictId},</if>
+            <if test="createTime != null ">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHumidityDevice" parameterType="HumidityDevice">
+        update humidity_device
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="humidityNumber != null  and humidityNumber != ''">humidity_number = #{humidityNumber},</if>
+            <if test="humidityName != null  and humidityName != ''">humidity_name = #{humidityName},</if>
+            <if test="dictId != null ">dict_id = #{dictId},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHumidityDeviceById" parameterType="Long">
+        delete from humidity_device where id = #{id}
+    </delete>
+
+    <delete id="deleteHumidityDeviceByIds" parameterType="String">
+        delete from humidity_device where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

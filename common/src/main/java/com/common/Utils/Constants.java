@@ -65,4 +65,13 @@ public class Constants
      * 资源映射路径 前缀
      */
     public static final String RESOURCE_PREFIX = "/profile";
+
+    /**
+     * 湿度接口地址
+     */
+    public static final String HUMIDITYRECORDER_URL="http://127.0.0.1/";
+    /**
+     * mqtt服务地址
+     */
+    public static final String MQTT_URL="http://127.0.0.1:83/";
 }

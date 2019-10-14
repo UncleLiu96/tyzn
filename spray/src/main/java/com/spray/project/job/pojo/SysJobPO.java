@@ -147,7 +147,7 @@ public class SysJobPO
      * @return
      */
     public String getStartCron(){
-        return DateUtils.getCron(DateUtils.dateTime("yyyy-MM-dd HH:mm:ss","2000-01-10 "+getStartTime()));
+        return DateUtils.getCron(DateUtils.dateTime("yyyy-MM-dd HH:mm:ss","2000-01-10"+getStartTime()));
     }
 
 

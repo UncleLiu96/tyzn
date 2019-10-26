@@ -13,8 +13,7 @@ import org.springframework.stereotype.Component;
  * @Author: Uncle liu
  */
 @Component
-public final class SpringUtils implements BeanFactoryPostProcessor
-{
+public final class SpringUtils implements BeanFactoryPostProcessor {
     /** Spring应用上下文环境 */
     private static ConfigurableListableBeanFactory beanFactory;
 

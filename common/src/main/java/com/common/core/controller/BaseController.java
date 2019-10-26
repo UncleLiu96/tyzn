@@ -5,7 +5,6 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.common.core.domain.AjaxResult;
 import com.common.core.domain.AjaxResult.Type;
-import com.common.core.page.PageDomain;
 import com.common.core.page.TableDataInfo;
 import com.common.core.page.TableSupport;
 import com.common.Utils.DateUtils;
